@@ -26,7 +26,7 @@ const Theme = () => {
         const fetchThemes = async () => {
             if (userId) {
                 try {
-                    const res = await axios.get(`http://test.loc/api/Theme/userId/${userId}`);
+                    const res = await axios.get(`https://localhost:7146/api/Theme/userId/${userId}`);
                     setData(res.data.data || []);
                 } catch (error) {
                     console.error('Layihələri əldə edərkən xəta:', error);

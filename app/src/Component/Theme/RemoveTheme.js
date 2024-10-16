@@ -5,7 +5,7 @@ import axios from 'axios';
 const RemoveTheme = ({ onClose, themeId, setData }) => {
     const remTheme = async () => {
         try {
-            await axios.delete(`http://test.loc/api/Theme?id=${themeId}`);
+            await axios.delete(`https://localhost:7146/api/Theme?id=${themeId}`);
             setData((prevData) => prevData.filter(theme => theme.id !== themeId));
             onClose(); 
             window.location.reload()

@@ -4,7 +4,7 @@ import NotDoneTask from '../Component/Task/NotDoneTask';
 
 const Tasks = () => {
     return (
-        <section >
+        <section className="more">
             <NotDoneTask />
             <DoneTask />
         </section>

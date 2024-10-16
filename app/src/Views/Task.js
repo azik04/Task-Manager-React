@@ -48,65 +48,78 @@ const Task = () => {
     const closeRemPopUp = () => setRemPopUp(false);
 
     return (
-        <main>
-            <div className="main">
-                <div className="main-info">
-                    <div className="main-info-begin">
-                        <div className="main-info-begin-name">
-                            <p>{details.taskName || 'N/A'}</p>
-                        </div>
-                        <div className="main-info-begin-options">
-                            <button onClick={createRemPopUp} className="main-info-begin-options-rem">
-                                Tapşırığı Sil
-                            </button>
-                            <button className="main-info-begin-options-btns" onClick={popUpVisible}>
-                                <img src={Edit} alt="Redaktə et" className="edit-icon" />
-                            </button>
-                        </div>
+        <section class="more">
+        <div class="get">
+            <div class="get_header">
+                <div class="get_header_left">  
+                    <p class="address">2893 Austin Secret Lane</p>
+                </div>
+                <div class="get_header_right">
+                    <button class="get_header_right_edt">Edit Task</button>
+                    <button class="get_header_right_rm">Cancel Task</button>
+                </div>
+            </div>
+            <div class="get_middle">
+                <div class="middle_one">
+                    <div class="get_middle_one">
+                        <label>Task Name</label>
+                        <p>It Uzre reqmsallasdirma</p>
                     </div>
-                    <div className="main-info-text">
-                        <div className="main-info-text-main">
-                            <div className="main-info-text-main-one">
-                                <p>Status</p>
-                                <h2>{details.status || 'N/A'}</h2>
-                            </div>
-                            <div className="main-info-text-main-one">
-                                <p>Prioritet</p>
-                                <h2>{details.priority || 'N/A'}</h2>
-                            </div>
-                            <div className="main-info-text-main-one">
-                                <p>Son tarix</p>
-                                <h2>{formatDate(details.deadLine) || 'N/A'}</h2>
-                            </div>
-                            <div className="main-info-text-main-one">
-                                <p>Yaradılma tarixi</p>
-                                <h2>{formatDate(details.createDate) || 'N/A'}</h2>
-                            </div>
-                            <div className="main-info-text-main-one">
-                                <p>Tamamlandı</p>
-                                <h2>{details.isCompleted ? 'Bəli' : 'Xeyr'}</h2>
-                            </div>
-                            <div className="main-info-text-main-one">
-                                <p>İcraçı</p>
-                                <h2>{executiveUserName || 'Yoxdur'}</h2>
-                            </div>
-                        </div>
-                        <div className="main-info-text-msg">
-                            <p className="main-info-text-msg-name">Təsvir</p>
-                            <p className="text">{details.taskDescription || 'Şərh yoxdur'}</p>
+                    <div class="get_middle_one">
+                        <label>Status</label>
+                        <p>In Progress</p>
+                    </div>
+                    <div class="get_middle_one">
+                        <label>Owner</label>
+                        <p>John Doe</p>
+                    </div>
+                </div>      
+                <div class="middle_one">
+                    <div class="get_middle_one">
+                        <label>Priority</label>
+                        <p>High</p>
+                    </div>
+                    <div class="get_middle_one">
+                        <label>Deadline</label>
+                        <p>2024-10-31</p>
+                    </div>
+                    <div class="get_middle_one">
+                        <label>Owner</label>
+                        <p>Jane Smith</p>
+                    </div>
+                </div>   
+                <div class="get_middle_one_comment">
+                    <label>Comment</label>
+                    <p>Lorem ipsum dolor sit.</p>
+                </div>
+            </div> 
+        </div>
+        <div class="info">
+            <div class="info_comment">
+                <div class="info_comment_header">
+                    <h2>Comments</h2>
+                    <button class="create-comment-button">Create Comment</button>
+                </div>
+                <div class="info_comment_list">
+                    <div class="info_comment_item">
+                        <div class="comment-meta">
+                            <p class="comment-text">Comment</p>
+                            <p class="username">username</p>
+                            <p class="created-at">created at</p>
+                            <i class="fa-regular fa-trash-can delete-icon"></i>
                         </div>
                     </div>
                 </div>
             </div>
-                <SubTask />
-            <div className="main-file-comment">
-                <Comment />
-                <File />
-                <UserInTask />
+            
+            <div class="info_file">
             </div>
-            {remPopUp && <RemoveTask onClose={closeRemPopUp} id={id} />}
-            {isEditPopupVisible && <EditTask id={id} onClose={closePopUpVisible} />}
-        </main>
+            
+            <div class="info_add">
+            </div>
+        </div>
+        
+    </section>
     );
 };
 

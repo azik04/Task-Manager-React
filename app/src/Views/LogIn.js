@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 
 import Photo from '../Photos/MXM_ADRA_Logotype_January_2018_Color.png';
-import Shape from '../Photos/Shape.svg';
 import { useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
@@ -18,7 +17,7 @@ const LogIn = () => {
         setErrors({}); 
 
         try {
-            const res = await axios.post(`http://test.loc/api/User/login`, {
+            const res = await axios.post(`https://localhost:7146/api/User/login`, {
                 userName: user,
                 password: password
             }, { withCredentials: true });
@@ -52,43 +51,38 @@ const LogIn = () => {
     };
 
     return (
-        <section className="login">
-            <div className="login-left">
-                <img src={Photo} alt="Sol Fon" />
-            </div>
-            <div className="login-right">
-                <div className="login-right-main">
-                    <h2>Giriş</h2>
+        <section className="auth">
+            <div className="auth_main">
+                <div className="auth_main_header">
+                    <img src={Photo} alt="Logo" />
+                </div>
+                <div className="auth_main_sect">
+                    <h2>Task Manager</h2>
+                    <p>Log In</p>
                     {error && <div className="error">{error}</div>}
                     <div className="login-right-main-inp">
                         <input 
                             type="text" 
-                            placeholder="E-mail" 
+                            placeholder="User Name" 
                             value={user}
                             onChange={(e) => setUserName(e.target.value)} 
                             required
                         />
-                        <img src={Shape} alt="E-mail İkonu" />
-                    {errors.UserName && <span className='error'>{errors.UserName[0]}</span>} 
+                        {errors.UserName && <span className='error'>{errors.UserName[0]}</span>} 
                     </div>
-                    
                     <div className="login-right-main-inp">
                         <input 
-                            type={showPassword ? "text" : "password"} 
-                            placeholder="Şifrə" 
+                            type="text" 
+                            placeholder="Password" 
                             value={password}
                             onChange={(e) => setPassword(e.target.value)} 
                             required
                         />
-                        <i 
-                            className={`fa-solid ${showPassword ? 'fa-eye-slash' : 'fa-eye'}`} 
-                            onClick={() => setShowPassword(!showPassword)}
-                            style={{ cursor: 'pointer' }} 
-                        ></i>
-                    {errors.Password && <span className='error'>{errors.Password[0]}</span>} 
+                        {errors.Password && <span className='error'>{errors.Password[0]}</span>} 
                     </div>
-                    
-                    <button onClick={fetchPost}>İrəlilə</button>
+                </div>
+                <div className="auth_main_footer">
+                    <button onClick={fetchPost}>Log In</button>
                 </div>
             </div>
         </section>

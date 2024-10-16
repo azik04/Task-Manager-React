@@ -37,11 +37,11 @@ const Header = () => {
         <header className="header">
             <div className="header-menu">
                 <a href="/admin" className="header-menu-one">
-                    <img src={User} alt="Admin" />
+                    <i class="fa-solid fa-users"></i>
                     <p>Admin</p>
                 </a>
                 <a href="/" className="header-menu-one" onClick={handleLogout}>
-                    <img src={User} alt="Log Out" />
+                    <i class="fa-solid fa-right-from-bracket"></i>
                     <p>Log Out</p>
                 </a>
             </div>
