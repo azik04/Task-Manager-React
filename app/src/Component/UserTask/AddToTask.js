@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const AddToTask = ({ onClose, taskId }) => {
     const [users, setUsers] = useState([]);
@@ -11,7 +11,7 @@ const AddToTask = ({ onClose, taskId }) => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await axios.get(`http://test.loc/${taskId}/GetUnassignedUsers`);
+                const res = await axios.get(`https://localhost:7146/${taskId}/GetUnassignedUsers`);
                 console.log("İstifadəçilər", res);
                 setUsers(res.data.data || []);
             } catch (error) {
@@ -32,7 +32,7 @@ const AddToTask = ({ onClose, taskId }) => {
                 return;
             }
 
-            await axios.post(`http://test.loc/api/UserTask/${taskId}/users/${selectedUserId}`);
+            await axios.post(`https://localhost:7146/api/UserTask/${taskId}/users/${selectedUserId}`);
             setSuccess('İstifadəçi tapşırığa müvəffəqiyyətlə əlavə edildi.');
             onClose(); 
             window.location.reload();
@@ -53,7 +53,7 @@ const AddToTask = ({ onClose, taskId }) => {
                         <h2>İstifadəçini Tapşırığa Əlavə Et</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

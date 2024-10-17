@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const EditTask = ({ id, onClose }) => {
     const [taskName, setTaskName] = useState('');
@@ -14,7 +14,7 @@ const EditTask = ({ id, onClose }) => {
     useEffect(() => {
         const fetchTaskDetails = async () => {
             try {
-                const res = await axios.get(`http://test.loc/api/Task/${id}`);
+                const res = await axios.get(`https://localhost:7146/api/Task/${id}`);
                 const task = res.data.data;
                 setTaskName(task.taskName);
                 setTaskDescription(task.taskDescription);
@@ -38,7 +38,7 @@ const EditTask = ({ id, onClose }) => {
         setErrors({}); 
 
         try {
-            const res = await axios.put(`http://test.loc/api/Task?id=${id}`, {
+            const res = await axios.put(`https://localhost:7146/api/Task?id=${id}`, {
                 taskName,
                 taskDescription,
                 status,
@@ -65,7 +65,7 @@ const EditTask = ({ id, onClose }) => {
                         <h2>Vəzifəni Düzəlt</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

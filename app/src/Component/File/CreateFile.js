@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Photo from '../Photos/Cancel.svg';  
+// import Photo from '../Photos/Cancel.svg';  
 
 const CreateFile = ({ onClose }) => {
     const [file, setFile] = useState(null);
@@ -26,7 +26,7 @@ const CreateFile = ({ onClose }) => {
         formData.append('taskId', id);  
         
         try {
-            await axios.post(`http://test.loc/api/File/upload`, formData, {
+            await axios.post(`https://localhost:7146/api/File/upload`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -53,7 +53,7 @@ const CreateFile = ({ onClose }) => {
                         <h2>Item Yarat</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
 import Icon from '../Photos/Icon.svg';
 import Theme from './Theme/Theme';
@@ -8,6 +8,7 @@ import User from '../Photos/User.svg';
 const Header = () => {
     const [isAdmin, setIsAdmin] = useState(false); 
     const navigate = useNavigate();
+    const location = useLocation(); // Get current location
 
     useEffect(() => {
         const token = localStorage.getItem('JWT');
@@ -21,12 +22,6 @@ const Header = () => {
         }
     }, []);
 
-
-    const options = [
-        { src: Icon, altText: 'Icon', to: '/Theme' },
-        ...(isAdmin ? [{ src: User, altText: 'User', to: '/Users' }] : []) 
-    ];
-
     const handleLogout = () => {
         localStorage.removeItem('JWT');
         localStorage.removeItem('UserId');
@@ -36,17 +31,23 @@ const Header = () => {
     return (
         <header className="header">
             <div className="header-menu">
-                <a href="/admin" className="header-menu-one">
-                    <i class="fa-solid fa-users"></i>
+                <a 
+                    href="/Admin" 
+                    className={`header-menu-one ${location.pathname === '/Admin' ? 'active' : ''}`}
+                >
+                    <i className="fa-solid fa-users"></i>
                     <p>Admin</p>
                 </a>
-                <a href="/" className="header-menu-one" onClick={handleLogout}>
-                    <i class="fa-solid fa-right-from-bracket"></i>
+                <a 
+                    href="/" 
+                    className={`header-menu-one ${location.pathname === '/' ? 'active' : ''}`} 
+                    onClick={handleLogout}
+                >
+                    <i className="fa-solid fa-right-from-bracket"></i>
                     <p>Log Out</p>
                 </a>
             </div>
-            <Theme/>
-           
+            <Theme />
         </header>
     );
 };

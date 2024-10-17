@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const ChangePassword = ({ onClose, userId }) => {
     const [currentPassword, setCurrentPassword] = useState('');
@@ -11,7 +11,7 @@ const ChangePassword = ({ onClose, userId }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
         try {
-            const res = await axios.put(`http://test.loc/api/User/ChangePassword?id=${userId}`, {
+            const res = await axios.put(`https://localhost:7146/api/User/ChangePassword?id=${userId}`, {
                 oldPassword: currentPassword,
                 newPassword: newPassword
             });
@@ -39,7 +39,7 @@ const ChangePassword = ({ onClose, userId }) => {
                         <h2>Şifrəni Dəyişdir</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

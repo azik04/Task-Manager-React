@@ -1,20 +1,15 @@
 import React from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg'; 
-import { useParams, useNavigate } from 'react-router-dom';
 
-const RemoveTask = ({ onClose }) => {
-    const { id } = useParams();
-    const navigate = useNavigate(); 
-
-    const remTask = async () => {
+const RemoveComment = ({ onClose, commentId }) => {
+    const remItem = async () => {
         try {
-            const res = await axios.delete(`http://test.loc/api/Task?id=${id}`);
-            console.log(res);
-            onClose(); 
-            navigate('/Theme'); 
+            const response = await axios.delete(`https://localhost:7146/api/Comment?id=${commentId}`);
+            console.log('Şərh uğurla silindi', response.data);
+            onClose();
+            window.location.reload(); 
         } catch (error) {
-            console.error('Error removing task:', error);
+            console.error("Şərhi silərkən xəta:", error.response ? error.response.data : error.message);
         }
     };
 
@@ -23,19 +18,19 @@ const RemoveTask = ({ onClose }) => {
             <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
                 <div className="pop-order-header">
                     <div className="pop-order-header-name">
-                        <h2>Tapşırığı Sil</h2>
+                        <h2>Şərhi Sil</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Close" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">
-                    <p>Bu tapşırığı silmək istəyirsiniz?</p>
+                    <p>Bu şərhi silmək istəyirsinizmi?</p>
                     <div className="pop-order-main-footer">
                         <div className="pop-order-main-footer-date">
                         </div>
                         <div className="pop-order-main-footer-btn">
-                            <button className='pop-order-main-footer-btn-all' onClick={remTask}>Sil</button>
+                            <button className='pop-order-main-footer-btn-all' onClick={remItem}>Sil</button>
                         </div>
                     </div>
                 </div>
@@ -44,4 +39,4 @@ const RemoveTask = ({ onClose }) => {
     );
 };
 
-export default RemoveTask;
+export default RemoveComment;

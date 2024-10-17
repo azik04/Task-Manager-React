@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import Edit from '../Photos/Edit.svg';
-import Comment from '../Component/Comment';
-import RemoveTask from '../Component/RemoveTask';
-import File from '../Component/File';
-import EditTask from '../Component/EditTask';
-import UserInTask from '../Component/UserInTask';
+import Comment from '../Component/Comment/Comment';
+import RemoveTask from '../Component/Task/RemoveTask';
+import File from '../Component/File/File';
+import EditTask from '../Component/Task/UpdateTask';
+import UserInTask from '../Component/UserTask/UserTask';
 import SubTask from '../Component/SubTask';
+
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.getFullYear() !== 1970
@@ -25,15 +25,14 @@ const Task = () => {
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const res = await axios.get(`http://test.loc/api/Task/${id}`);
+                const res = await axios.get(`https://localhost:7146/api/Task/${id}`);
                 setDetails(res.data.data || {});
-
                 if (res.data.data && res.data.data.executiveUserId) {
-                    const userRes = await axios.get(`http://test.loc/api/User/${res.data.data.executiveUserId}`);
+                    const userRes = await axios.get(`https://localhost:7146/api/User/${res.data.data.executiveUserId}`);
                     setExecutiveUserName(userRes.data.data.userName); 
                 }
             } catch (error) {
-                console.error('Tapşırıq detallarını əldə edərkən xəta:', error);
+                console.error('Error fetching task details:', error);
             }
         };
 
@@ -42,82 +41,64 @@ const Task = () => {
         }
     }, [id]);
 
-    const popUpVisible = () => setIsEditPopupVisible(true);
-    const closePopUpVisible = () => setIsEditPopupVisible(false);
-    const createRemPopUp = () => setRemPopUp(true);
-    const closeRemPopUp = () => setRemPopUp(false);
+    const openEditPopup = () => setIsEditPopupVisible(true);
+    const closeEditPopup = () => setIsEditPopupVisible(false);
+    const openRemovePopup = () => setRemPopUp(true);
+    const closeRemovePopup = () => setRemPopUp(false);
 
     return (
-        <section class="more">
-        <div class="get">
-            <div class="get_header">
-                <div class="get_header_left">  
-                    <p class="address">2893 Austin Secret Lane</p>
+        <section className="more">
+            <div className="get">
+                <div className="get_header">
+                    <div className="get_header_left">  
+                        <p className="address">2893 Austin Secret Lane</p>
+                    </div>
+                    <div className="get_header_right">
+                        <button className="get_header_right_edt" onClick={openEditPopup}>Edit Task</button>
+                        <button className="get_header_right_rm" onClick={openRemovePopup}>Cancel Task</button>
+                    </div>
                 </div>
-                <div class="get_header_right">
-                    <button class="get_header_right_edt">Edit Task</button>
-                    <button class="get_header_right_rm">Cancel Task</button>
-                </div>
-            </div>
-            <div class="get_middle">
-                <div class="middle_one">
-                    <div class="get_middle_one">
-                        <label>Task Name</label>
-                        <p>It Uzre reqmsallasdirma</p>
-                    </div>
-                    <div class="get_middle_one">
-                        <label>Status</label>
-                        <p>In Progress</p>
-                    </div>
-                    <div class="get_middle_one">
-                        <label>Owner</label>
-                        <p>John Doe</p>
-                    </div>
-                </div>      
-                <div class="middle_one">
-                    <div class="get_middle_one">
-                        <label>Priority</label>
-                        <p>High</p>
-                    </div>
-                    <div class="get_middle_one">
-                        <label>Deadline</label>
-                        <p>2024-10-31</p>
-                    </div>
-                    <div class="get_middle_one">
-                        <label>Owner</label>
-                        <p>Jane Smith</p>
-                    </div>
-                </div>   
-                <div class="get_middle_one_comment">
-                    <label>Comment</label>
-                    <p>Lorem ipsum dolor sit.</p>
-                </div>
-            </div> 
-        </div>
-        <div class="info">
-            <div class="info_comment">
-                <div class="info_comment_header">
-                    <h2>Comments</h2>
-                    <button class="create-comment-button">Create Comment</button>
-                </div>
-                <div class="info_comment_list">
-                    <div class="info_comment_item">
-                        <div class="comment-meta">
-                            <p class="comment-text">Comment</p>
-                            <p class="username">username</p>
-                            <p class="created-at">created at</p>
-                            <i class="fa-regular fa-trash-can delete-icon"></i>
+                <div className="get_middle">
+                    <div className="middle_one">
+                        <div className="get_middle_one">
+                            <label>Task Name</label>
+                            <p>{details.taskName}</p>
                         </div>
+                        <div className="get_middle_one">
+                            <label>Status</label>
+                            <p>{details.Status}</p>
+                        </div>
+                        <div className="get_middle_one">
+                            <label>Owner</label>
+                            <p>{executiveUserName}</p>
+                        </div>
+                    </div>      
+                    <div className="middle_one">
+                        <div className="get_middle_one">
+                            <label>Priority</label>
+                            <p>{details.priority}</p>
+                        </div>
+                        <div className="get_middle_one">
+                            <label>Deadline</label>
+                            <p>{formatDate(details.deadLine)}</p>
+                        </div>
+                    </div>   
+                    <div className="get_middle_one_comment">
+                        <label>Comment</label>
+                        <p>{details.comment}</p>
                     </div>
-                </div>
+                </div> 
             </div>
+        <div class="info">
+            <Comment/>
+            <File/>
+            <UserInTask/>
             
-            <div class="info_file">
-            </div>
+        </div>  {/* Edit Task Popup */}
+            {isEditPopupVisible && <EditTask id={id} onClose={closeEditPopup} />}
             
-            <div class="info_add">
-            </div>
-        </div>
+            {/* Remove Task Popup */}
+            {remPopUp && <RemoveTask onClose={closeRemovePopup} />}
         
     </section>
     );

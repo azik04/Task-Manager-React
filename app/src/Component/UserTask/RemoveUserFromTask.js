@@ -1,11 +1,11 @@
 import React from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const RemoveUserFromTask = ({ onClose, userId, taskId }) => {
     const handleRemove = async () => {
         try {
-            await axios.delete(`http://test.loc/api/UserTask/${taskId}/users/${userId}`);
+            await axios.delete(`https://localhost:7146/api/UserTask/${taskId}/users/${userId}`);
             console.log("User removed:", userId);
             window.location.reload(); 
         } catch (error) {
@@ -21,7 +21,7 @@ const RemoveUserFromTask = ({ onClose, userId, taskId }) => {
                         <h2>Tapşırıqdan İstifadəçini Sil</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Close" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Close" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

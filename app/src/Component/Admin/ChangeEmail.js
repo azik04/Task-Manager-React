@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const ChangeEmail = ({ onClose, userId }) => {
     const [oldEmail, setOldEmail] = useState('');
@@ -12,7 +12,7 @@ const ChangeEmail = ({ onClose, userId }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
         try {
-            const res = await axios.put(`http://test.loc/api/User/ChangeEmail?id=${userId}`, {
+            const res = await axios.put(`https://localhost:7146/api/User/ChangeEmail?id=${userId}`, {
                 oldEmail,
                 newEmail
             });
@@ -37,7 +37,7 @@ const ChangeEmail = ({ onClose, userId }) => {
                         <h2>E-poçtu Dəyişdir</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

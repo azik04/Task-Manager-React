@@ -1,13 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const RemoveUser = ({ onClose, userId }) => {
     const handleRemove = async () => {
         try {
             axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
-            await axios.delete(`http://test.loc/api/User?id=${userId}`); 
+            await axios.delete(`https://localhost:7146/api/User?id=${userId}`); 
             console.log("User removed:", userId);
             window.location.reload(); 
         } catch (error) {
@@ -23,7 +23,7 @@ const RemoveUser = ({ onClose, userId }) => {
                         <h2>İstifadəçini Sil</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Close" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Close" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

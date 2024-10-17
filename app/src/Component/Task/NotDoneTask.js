@@ -47,9 +47,10 @@ const NotDoneTasks = () => {
 
     const completeTask = async (id) => {
         try {
-            const res = await axios.put(`https://localhost:7146/api/Task/complete/${id}`);
+            const res = await axios.put(`https://localhost:7146/api/Task/complite/${id}`);
             console.log('Task completed:', res.data);
             setNotDoneTasks(prevTasks => prevTasks.filter(task => task.id !== id)); 
+            window.location.reload()
         } catch (error) {
             console.error('Error completing task:', error.response ? error.response.data : error.message);
         }

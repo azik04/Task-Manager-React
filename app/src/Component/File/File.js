@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Delate from '../Photos/Delate.svg';
 import { useParams } from 'react-router-dom';
-import CreateFile from '../Component/CreateFile';
-import RemoveFile from '../Component/RemoveFile'; 
+import CreateFile from './CreateFile';
+import RemoveFile from './RemoveFile';
 
 const File = () => {
     const [isCreatePopupVisible, setCreatePopupVisible] = useState(false);
@@ -15,7 +14,7 @@ const File = () => {
     useEffect(() => {
         const fetchData = async (id) => {
             try {
-                const res = await axios.get(`http://test.loc/api/File/task/${id}`);
+                const res = await axios.get(`https://localhost:7146/api/File/task/${id}`);
                 console.log("Fayllar", res.data.data);
                 setItems(res.data.data || []);  
             } catch (error) {
@@ -45,10 +44,10 @@ const File = () => {
 
     const downloadFile = async (fileId, fileName) => {
         try {
-            const res = await axios.get(`http://test.loc/api/File/${fileId}`, {
+            const res = await axios.get(`https://localhost:7146/api/File/${fileId}`, {
                 responseType: 'blob', 
             });
-
+            console.log(res)
             const fileURL = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = fileURL;
@@ -62,42 +61,30 @@ const File = () => {
     };
 
     return (
-        <div className="main-info-block">
-            <div className="main-info-block-header">
-                <div className="main-info-block-header-left">
-                    <p>Fayllar</p>
-                </div>
-                <div className="main-info-block-header-right">
-                    <a href="#" onClick={createPopupVisible}>
-                        <i className="fa-solid fa-plus"></i> Əlavə et
-                    </a>
-                </div>
+        <div className="info_file">
+            <div className="info_comment_header">
+                <h2>File</h2>
+                <button className="create-comment-button" onClick={createPopupVisible}>Create File</button>
             </div>
-            <div className="main-info-block-table">
-                <table>
-                    <tbody>
-                        {items.length > 0 ? (
-                            items.map((item) => (
-                                <tr key={item.id}>
-                                    <td className="bold">
-                                        <a href="#" onClick={() => downloadFile(item.id, item.fileName)}>
-                                            {item.fileName}
-                                        </a>
-                                    </td>
-                                    <td className="action-column">
-                                        <a href="#" className='pagin-btn' onClick={() => removePopupVisible(item.id)}>
-                                            <img src={Delate} alt="Sil" />
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="2">Heç bir fayl tapılmadı</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+            <div className="info_comment_list">
+                {items.length > 0 ? (
+                    items.map((item) => (
+                        <div className="info_comment_item" key={item.id}>
+                            <div className="comment-meta-header">
+                                <p className="comment-text">
+                                    <a href="#" onClick={() => downloadFile(item.id, item.fileName)}>
+                                        {item.fileName}
+                                    </a>
+                                </p>
+                                <div className="comment-meta-rm">
+                                    <i className="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i>
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p className="info_comment_list">Heç bir fayl tapılmadı</p>
+                )}
             </div>
             {isCreatePopupVisible && <CreateFile onClose={closeCreatePopupVisible} />}
             {isRemovePopupVisible && removeId !== null && <RemoveFile onClose={closeRemovePopupVisible} documentId={removeId} />}

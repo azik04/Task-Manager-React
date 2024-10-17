@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
-import Photo from '../Photos/Cancel.svg';  
 
 const CreateComment = ({ onClose }) => {
     const [message, setMessage] = useState('');
@@ -22,7 +21,7 @@ const CreateComment = ({ onClose }) => {
         console.log("Göndəriləcək məlumat:", commentData);  
 
         try {
-            const response = await axios.post(`http://test.loc/api/Comment`, commentData);
+            const response = await axios.post(`https://localhost:7146/api/Comment`, commentData);
             console.log("Şərh uğurla yaradıldı", response.data);
             onClose(); 
             window.location.reload();
@@ -43,7 +42,7 @@ const CreateComment = ({ onClose }) => {
                         <h2>Şərh Yaradın</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

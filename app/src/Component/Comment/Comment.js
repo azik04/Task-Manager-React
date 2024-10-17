@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Delate from '../Photos/Delate.svg';
 import { useParams } from 'react-router-dom';
-import CreateComment from '../Component/CreateComment';
-import RemoveComment from '../Component/RemoveComment';
+import CreateComment from './CreateComment';
+import RemoveComment from './RemoveComment';
 
 const Comment = () => {
     const [isCreatePopupVisible, setCreatePopupVisible] = useState(false);
@@ -18,8 +17,7 @@ const Comment = () => {
     useEffect(() => {
         const fetchData = async (id) => {
             try {
-                const res = await axios.get(`http://test.loc/api/Comment?taskId=${id}`);
-                console.log("Şərhlər", res.data);
+                const res = await axios.get(`https://localhost:7146/api/Comment?taskId=${id}`);
                 const comments = res.data.data || [];
                 setItems(comments);
                 fetchUserNames(comments); 
@@ -43,8 +41,7 @@ const Comment = () => {
 
         await Promise.all(userIds.map(async (userId) => {
             try {
-                const response = await axios.get(`http://test.loc/api/User/${userId}`);
-                console.log(`İstifadəçi ID ${userId} üçün cavab:`, response.data.data);
+                const response = await axios.get(`https://localhost:7146/api/User/${userId}`);
                 userMap[userId] = response.data.data.userName; 
             } catch (error) {
                 console.error(`İstifadəçi ID ${userId}-ni alarkən xəta baş verdi:`, error);
@@ -77,45 +74,30 @@ const Comment = () => {
     };
 
     return (
-        <div className="main-info-block">
-            <div className="main-info-block-header">
-                <div className="main-info-block-header-left">
-                    <p>Şərhləri Düzəliş Et</p>
-                </div>
-                <div className="main-info-block-header-right">
-                    <a href="#" onClick={createPopupVisible}><i className="fa-solid fa-plus"></i> Əlavə et</a>
-                </div>
+        <div className="info_comment">
+            <div className="info_comment_header">
+                <h2>Comments</h2>
+                <button className="create-comment-button" onClick={createPopupVisible}>Create Comment</button>
             </div>
-            <div className="main-info-block-table">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>İSTİFADƏÇİ</th>
-                            <th>ŞƏRH</th>
-                            <th>NƏŞR TARİXİ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {items.length > 0 ? (
-                            items.map((item) => (
-                                <tr key={item.id}>
-                                    <td className="bold">{userNames[item.userId] || 'Yüklənir...'}</td> 
-                                    <td className="bold">{item.message}</td>
-                                    <td className="bold">{formatDateTime(item.createAt)}</td>
-                                    <td className="action-column">
-                                        <a href="#" className='pagin-btn' onClick={() => removePopupVisible(item.id)}>
-                                            <img src={Delate} alt="Sil" />
-                                        </a>
-                                    </td>
-                                </tr>
-                            ))
-                        ) : (
-                            <tr>
-                                <td colSpan="4">Şərh tapılmadı</td>
-                            </tr>
-                        )}
-                    </tbody>
-                </table>
+            
+            <div className="info_comment_list">
+                {items.length > 0 ? (
+                    items.map((item) => (
+                        <div className="info_comment_item" key={item.id}>
+                            <div className="comment-meta-header">
+                                <p className="comment-text">{item.message}</p>
+                                <p className="username">{userNames[item.userId] || 'Yüklənir...'}</p>
+                                <p className="created-at">{formatDateTime(item.createAt)}</p>
+                                <div className="comment-meta-rm">
+                                <i class="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i> 
+                                </div>
+                            </div>
+                        </div>
+                    ))
+                ) : (
+                    <p className="info_comment_list_p">Heç bir comment tapılmadı</p>
+
+                )}
             </div>
             {isCreatePopupVisible && <CreateComment onClose={closeCreatePopupVisible} />}
             {isRemovePopupVisible && removeId !== null && <RemoveComment onClose={closeRemovePopupVisible} commentId={removeId} />}

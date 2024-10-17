@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 import axios from 'axios';
 
 const CreateUser = ({ onClose }) => {
@@ -13,7 +13,7 @@ const CreateUser = ({ onClose }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
         try {
-            const response = await axios.post('http://test.loc/api/User/register', {
+            const response = await axios.post('https://localhost:7146/api/User/register', {
                 email: email,
                 password: password,
                 userName: userName
@@ -41,7 +41,7 @@ const CreateUser = ({ onClose }) => {
                         <h2>İstifadəçi Yarat</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const ChangeRole = ({ onClose, userId }) => {
     const [newRole, setNewRole] = useState('');
@@ -9,7 +9,7 @@ const ChangeRole = ({ onClose, userId }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
         try {
-            const res = await axios.put(`http://test.loc/api/User/ChangeRole?id=${userId}`, {
+            const res = await axios.put(`https://localhost:7146/api/User/ChangeRole?id=${userId}`, {
                 newRole: newRole,
             });
             console.log(res);
@@ -28,7 +28,7 @@ const ChangeRole = ({ onClose, userId }) => {
                         <h2>Rolu Dəyişdir</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

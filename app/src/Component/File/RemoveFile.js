@@ -1,17 +1,15 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import Photo from '../Photos/Cancel.svg';
+// import Photo from '../Photos/Cancel.svg';
 
 const RemoveFile = ({ onClose, documentId }) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     const remItem = async () => {
-        setLoading(true);
-        setError(null);
         
         try {
-            const response = await axios.delete(`http://test.loc/api/File/${documentId}`);
+            const response = await axios.delete(`https://localhost:7146/api/File/${documentId}`);
             console.log('Fayl uğurla silindi');
             console.log(response);
             onClose();
@@ -19,9 +17,7 @@ const RemoveFile = ({ onClose, documentId }) => {
         } catch (error) {
             setError("Faylı silmək alınmadı. Zəhmət olmasa, yenidən cəhd edin.");
             console.log("Xəta", error);
-        } finally {
-            setLoading(false);
-        }
+        } 
     };
 
     return (
@@ -32,7 +28,7 @@ const RemoveFile = ({ onClose, documentId }) => {
                         <h2>Faylı Sil</h2>
                     </div>
                     <div className="pop-order-header-icon">
-                        <button onClick={onClose}><img src={Photo} alt="Bağla" /></button>
+                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
                     </div>
                 </div>
                 <div className="pop-order-main">

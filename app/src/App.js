@@ -6,7 +6,7 @@ import LogIn from './Views/LogIn';
 import Theme from './Views/Theme';
 import Tasks from './Views/Tasks';
 import Task from './Views/Task';
-import Users from './Views/Users';
+import Admin from './Views/Admin';
 import TaskAdded from './Views/TaskAdded'
 const App = () => {
     return (
@@ -19,7 +19,7 @@ const App = () => {
                     <Route path="Theme/:themeId/Task" element={<Tasks />} />
                     <Route path="Task/:id" element={<Task />} />
                     <Route path="Task/:id/Added" element={<TaskAdded />} />
-                    <Route path="Users" element={<Users />} />
+                    <Route path="Admin" element={<Admin />} />
                 </Route>
             </Route>
         </Routes>

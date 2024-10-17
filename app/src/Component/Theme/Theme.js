@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import RemoveTheme from './RemoveTheme';
 import CreateTheme from './CreateTheme'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Theme = () => {
     const [data, setData] = useState([]);
@@ -10,6 +10,7 @@ const Theme = () => {
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const [themeToRemove, setThemeToRemove] = useState(null);
     const [isCreatingTheme, setIsCreatingTheme] = useState(false);
+    const location = useLocation(); // Get current location
 
     useEffect(() => {
         const storedUserId = localStorage.getItem("UserId"); 
@@ -53,7 +54,11 @@ const Theme = () => {
                 <button onClick={handleAddTheme}>+</button>
             </div>
             {data.map((theme) => (
-                <Link to={`/Theme/${theme.id}/Task`} key={theme.id} className="header-themes-one">
+                <Link 
+                    to={`/Theme/${theme.id}/Task`} 
+                    key={theme.id} 
+                    className={`header-themes-one ${location.pathname === `/Theme/${theme.id}/Task` ? 'active' : ''}`} // Add active class
+                >
                     <div className="header-themes-one-left">
                         <i className="fa-solid fa-clipboard"></i>
                         <p>{theme.name}</p>
