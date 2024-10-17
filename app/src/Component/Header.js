@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
-import Icon from '../Photos/Icon.svg';
+import {jwtDecode} from 'jwt-decode'; 
 import Theme from './Theme/Theme';
-import User from '../Photos/User.svg';
+import UserTask from './UserTask/TaskUser';
 
 const Header = () => {
     const [isAdmin, setIsAdmin] = useState(false); 
     const navigate = useNavigate();
-    const location = useLocation(); // Get current location
+    const location = useLocation(); 
 
     useEffect(() => {
         const token = localStorage.getItem('JWT');
@@ -48,6 +47,7 @@ const Header = () => {
                 </a>
             </div>
             <Theme />
+            <UserTask />
         </header>
     );
 };

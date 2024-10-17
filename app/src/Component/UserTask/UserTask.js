@@ -9,7 +9,7 @@ const UserInTask = () => {
     const [isRemovePopupVisible, setRemovePopupVisible] = useState(false);
     const [removeId, setRemoveId] = useState(null);
     const [items, setItems] = useState([]);
-    const { id } = useParams(); // Task ID
+    const { id } = useParams(); 
 
     useEffect(() => {
         const fetchData = async () => {

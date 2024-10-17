@@ -10,7 +10,7 @@ const Nav = () => {
                         <img src={Logo} alt="Logo" />
                     </div>
                     <div className="navbar-content-menu-name">
-                        <p>Azərbaycan Respublikasının Dövlət Reklam Agentliyi</p>
+                        <p>Task Manager</p>
                     </div>
                 </div>
                 <div className="navbar-content-menu-options">
