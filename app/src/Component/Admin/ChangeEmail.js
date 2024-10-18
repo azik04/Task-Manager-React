@@ -23,50 +23,52 @@ const ChangeEmail = ({ onClose, userId }) => {
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
-            } else {
-                setErrors({ general: 'E-poçtu dəyişərkən xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.' });
-            }
+            } 
         }
     };
 
     return (
-        <section className="pop" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 }}>
-            <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
-                <div className="pop-order-header">
-                    <div className="pop-order-header-name">
-                        <h2>E-poçtu Dəyişdir</h2>
+        <section className="pop">
+            <div className="pop-order">
+                <div className="pop_order_nav">
+                    <div className="pop_order_nav_left">
+                        <p>E-poçtu Dəyişdir</p>
                     </div>
-                    <div className="pop-order-header-icon">
+                    <div className="pop_order_nav_right">
                         {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
+                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
-                <div className="pop-order-main">
-                    {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>} 
-                    <div className="pop-order-main-one">
-                        <p>Keçmiş E-poçt</p>
+
+                <div className="pop_order_mid">
+                    {errors.general && <p className="error" style={{ color: 'red' }}>{errors.general}</p>} 
+
+                    <div className="pop_order_mid_inp">
+                        <label htmlFor="oldEmail">Keçmiş E-poçt</label>
                         <input 
                             type="text" 
+                            id="oldEmail"
                             placeholder="Keçmiş E-poçt" 
                             value={oldEmail} 
                             onChange={(e) => setOldEmail(e.target.value)} 
                         />
                         {errors.OldEmail && <span className="error">{errors.OldEmail[0]}</span>}
                     </div>
-                    <div className="pop-order-main-one">
-                        <p>Yeni E-poçt</p>
+
+                    <div className="pop_order_mid_inp">
+                        <label htmlFor="newEmail">Yeni E-poçt</label>
                         <input 
                             type="text" 
+                            id="newEmail"
                             placeholder="Yeni E-poçt" 
                             value={newEmail} 
                             onChange={(e) => setNewEmail(e.target.value)} 
                         />
                         {errors.NewEmail && <span className="error">{errors.NewEmail[0]}</span>} 
                     </div>
-                    <div className="pop-order-main-footer">
-                        <div className="pop-order-main-footer-date"></div>
-                        <div className="pop-order-main-footer-btn">
-                            <button className='pop-order-main-footer-btn-all' onClick={chgEmail}>Tamam</button>
-                        </div>
+
+                    <div className="pop_order_main_footer">
+                        <button className='pop_order_submit_btn' onClick={chgEmail}>Tamam</button>
                     </div>
                 </div>
             </div>

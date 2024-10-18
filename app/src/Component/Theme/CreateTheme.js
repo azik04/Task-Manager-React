@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-// import Photo from '../Photos/Cancel.svg';
 import axios from 'axios';
 
 const CreateTheme = ({ onClose }) => {
     const [name, setName] = useState('');
     const [userId, setUserId] = useState(null);
-    const [errors, setErrors] = useState([]); 
+    const [errors, setErrors] = useState([]);
 
     useEffect(() => {
         const storedUserId = localStorage.getItem("UserId");
@@ -15,20 +14,20 @@ const CreateTheme = ({ onClose }) => {
             console.error('Local saxlamada UserId tapılmadı');
         }
     }, []);
+
     axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
+
     const fetchNew = async () => {
-        setErrors([]); 
+        setErrors([]);
         if (!name.trim()) {
             setErrors(['Mövzu adı tələb olunur.']);
             return;
         }
-        console.log("UserId",userId)
         try {
             const res = await axios.post(`https://localhost:7146/api/Theme`, {
-                name: name,
-                userId: userId
+                name,
+                userId
             });
-
             console.log("Mövzu müvəffəqiyyətlə yaradıldı", res.data);
             onClose();
             window.location.reload();
@@ -37,46 +36,45 @@ const CreateTheme = ({ onClose }) => {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors.Name || ['Mövzu yaradılarkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.']);
             } else {
-                setErrors(['Mövzu yaradılarkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.']); 
+                setErrors(['Mövzu yaradılarkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.']);
             }
         }
     };
 
     return (
-        <section className="pop" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 }}>
-            <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
-                <div className="pop-order-header">
-                    <div className="pop-order-header-name">
-                        <h2>Layihəni Yarat</h2>
+        <section className="pop">
+            <div className="pop-order">
+                {/* Header with close button */}
+                <div className="pop_order_nav">
+                    <div className="pop_order_nav_left">
+                        <p>Layihəni Yarat</p>
                     </div>
-                    <div className="pop-order-header-icon">
-                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
+                    <div className="pop_order_nav_right">
+                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
-                <div className="pop-order-main">
-                    <div className="pop-order-main-one">
-                        <p>Ad</p>
-                        <input 
-                            type="text" 
-                            placeholder="Ad" 
-                            value={name} 
-                            onChange={(e) => setName(e.target.value)} 
+
+                {/* Form content */}
+                <div className="pop_order_mid">
+                    {errors.length > 0 && (
+                        <div className="error">
+                            {errors.map((error, index) => (
+                                <span key={index} style={{ color: 'red' }}>{error}</span>
+                            ))}
+                        </div>
+                    )}
+                    <div className="pop_order_mid_inp">
+                        <label htmlFor="name">Ad</label>
+                        <input
+                            type="text"
+                            id="name"
+                            placeholder="Mövzu adı"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
-                        {errors.length > 0 && (
-                            <div className="error">
-                                {errors.map((error, index) => (
-                                    <span key={index}>{error}</span>
-                                ))}
-                            </div>
-                        )} 
                     </div>
-                    <div className="pop-order-main-footer">
-                        <div className="pop-order-main-footer-date">
-                        </div>
-                        <div className="pop-order-main-footer-btn">
-                            <button className='pop-order-main-footer-btn-all' onClick={fetchNew}>Tamamla</button>
-                        </div>
-                    </div>
+
+                    <button className="pop_order_submit_btn" onClick={fetchNew}>Tamamla</button>
                 </div>
             </div>
         </section>

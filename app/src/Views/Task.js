@@ -6,7 +6,7 @@ import RemoveTask from '../Component/Task/RemoveTask';
 import File from '../Component/File/File';
 import EditTask from '../Component/Task/UpdateTask';
 import UserInTask from '../Component/UserTask/UserTask';
-import SubTask from '../Component/SubTask';
+import SubTask from '../Component/SubTask/SubTask';
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -27,6 +27,7 @@ const Task = () => {
             try {
                 const res = await axios.get(`https://localhost:7146/api/Task/${id}`);
                 setDetails(res.data.data || {});
+                console.log(res.data.data)
                 if (res.data.data && res.data.data.executiveUserId) {
                     const userRes = await axios.get(`https://localhost:7146/api/User/${res.data.data.executiveUserId}`);
                     setExecutiveUserName(userRes.data.data.userName); 
@@ -51,7 +52,7 @@ const Task = () => {
             <div className="get">
                 <div className="get_header">
                     <div className="get_header_left">  
-                        <p className="address">2893 Austin Secret Lane</p>
+                        <p className="address">{details.taskName}</p>
                     </div>
                     <div className="get_header_right">
                         <button className="get_header_right_edt" onClick={openEditPopup}>Edit Task</button>
@@ -66,7 +67,7 @@ const Task = () => {
                         </div>
                         <div className="get_middle_one">
                             <label>Status</label>
-                            <p>{details.Status}</p>
+                            <p>{details.status}</p>
                         </div>
                         <div className="get_middle_one">
                             <label>Owner</label>
@@ -85,12 +86,16 @@ const Task = () => {
                     </div>   
                     <div className="get_middle_one_comment">
                         <label>Comment</label>
-                        <p>{details.comment}</p>
+                        <p>{details.taskDescription}</p>
                     </div>
                 </div> 
             </div>
+            <div className='sub_task'>
+                <SubTask/>
+                <Comment/>
+            </div>
         <div class="info">
-            <Comment/>
+            
             <File/>
             <UserInTask/>
             

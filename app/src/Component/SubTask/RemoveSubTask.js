@@ -1,25 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 
-const RemoveComment = ({ onClose, commentId }) => {
+const RemoveSubTask = ({ subtaskId, onClose }) => {
+    const [error, setError] = useState(null);
+
     const remItem = async () => {
+        setError(null);
+        
         try {
-            const response = await axios.delete(`https://localhost:7146/api/Comment?id=${commentId}`);
-            console.log('Şərh uğurla silindi', response.data);
+            const response = await axios.delete(`https://localhost:7146/api/SubTask?id=${subtaskId}`); // Use subtaskId here
+            console.log('Alt tapşırıq uğurla silindi', response.data);
             onClose();
-            window.location.reload();
+            window.location.reload(); 
         } catch (error) {
-            console.error("Şərhi silərkən xəta:", error.response ? error.response.data : error.message);
+            setError("Alt tapşırığı silmək alınmadı. Zəhmət olmasa, yenidən cəhd edin.");
+            console.error("Xəta", error);
         }
     };
 
     return (
         <section className="pop">
             <div className="pop-order">
-                {/* Header with close button */}
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
-                        <p>Şərhi Sil</p>
+                        <p>SubTaski Sil</p>
                     </div>
                     <div className="pop_order_nav_right">
                         <i className="fa-solid fa-xmark" onClick={onClose}></i>
@@ -28,7 +32,7 @@ const RemoveComment = ({ onClose, commentId }) => {
 
                 <div className="pop_order_mid">
                     <div className="pop_order_mid_inp">
-                        <p>Bu şərhi silmək istəyirsinizmi?</p>
+                        <p>Are you sure you want to remove this SubTask?</p>
                     </div>
                     <div className='pop_order_footer'>
                         <button className="rem_btn" onClick={remItem}>Sil</button>
@@ -39,4 +43,4 @@ const RemoveComment = ({ onClose, commentId }) => {
     );
 };
 
-export default RemoveComment;
+export default RemoveSubTask;

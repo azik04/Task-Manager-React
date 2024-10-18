@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-// import Photo from '../Photos/Cancel.svg';
 
 const EditTask = ({ id, onClose }) => {
     const [taskName, setTaskName] = useState('');
@@ -58,59 +57,78 @@ const EditTask = ({ id, onClose }) => {
     };
 
     return (
-        <section className="pop" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 }}>
-            <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
-                <div className="pop-order-header">
-                    <div className="pop-order-header-name">
-                        <h2>Vəzifəni Düzəlt</h2>
+        <section className="pop">
+            <div className="pop-order">
+                <div className="pop_order_nav">
+                    <div className="pop_order_nav_left">
+                        <p>Vəzifəni Düzəlt</p>
                     </div>
-                    <div className="pop-order-header-icon">
-                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
+                    <div className="pop_order_nav_right">
+                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
-                <div className="pop-order-main">
+                <div className="pop_order_mid">
                     <form onSubmit={handleUpdate}>
-                        <div className="pop-order-main-one">
-                            <p>Vəzifənin Adı</p>
-                            <input type="text" value={taskName} onChange={(e) => setTaskName(e.target.value)} />
+                        <div className="pop_order_mid_inp">
+                            <label htmlFor="taskName">Vəzifənin Adı</label>
+                            <input 
+                                type="text" 
+                                value={taskName} 
+                                onChange={(e) => setTaskName(e.target.value)} 
+                                placeholder="Vəzifənin Adı"
+                            />
                             {errors.TaskName && <span className="error">{errors.TaskName[0]}</span>} 
                         </div>
-                        <div className="pop-order-main-one">
-                            <p>Vəzifə Təsviri</p>
-                            <input type="text" value={taskDescription} onChange={(e) => setTaskDescription(e.target.value)} />
+                        <div className="pop_order_mid_inp">
+                            <label htmlFor="taskDescription">Vəzifə Təsviri</label>
+                            <textarea 
+                                rows="4" 
+                                value={taskDescription} 
+                                onChange={(e) => setTaskDescription(e.target.value)} 
+                                placeholder="Vəzifə Təsviri"
+                            />
                             {errors.TaskDescription && <span className="error">{errors.TaskDescription[0]}</span>}
                         </div>
-                        <div className="pop-order-main-one">
-                            <p>Status</p>
-                            <select value={status} onChange={(e) => setStatus(e.target.value)} required>
-                                <option value="" disabled>Status seçin</option>
-                                <option value="Prosesdedir">Prosesdedir</option>
-                                <option value="Riskdə">Riskdə</option>
-                                <option value="Gecikmiş">Gecikmiş</option>
-                            </select>
-                            {errors.Status && <span className='Error'>{errors.Status[0]}</span>} 
-                        </div>
-                        <div className="pop-order-main-one">
-                            <p>Prioritet</p>
-                            <select value={priority} onChange={(e) => setPriority(e.target.value)} required>
-                                <option value="" disabled>Prioritet seçin</option>
-                                <option value="Aşağı">Aşağı</option>
-                                <option value="Orta">Orta</option>
-                                <option value="Yüksək">Yüksək</option>
-                            </select>
-                            {errors.Priority && <span className='Error'>{errors.Priority[0]}</span>} 
-                        </div>
-                        <div className="pop-order-main-one">
-                            <p>Son Tarix</p>
-                            <input type="date" value={deadLine} onChange={(e) => setDeadLine(e.target.value)} />
-                            {errors.DeadLine && <span className='Error'>{errors.DeadLine[0]}</span>} 
-                        </div>
-                        <div className="pop-order-main-footer">
-                            <div className="pop-order-main-footer-date"></div>
-                            <div className="pop-order-main-footer-btn">
-                                <button className='pop-order-main-footer-btn-all' type="submit">Yenilə</button>
+                        <div className="pop_order_mid_flex">
+                            <div className="pop_order_mid_inp">
+                                <label htmlFor="status">Status</label>
+                                <select 
+                                    value={status} 
+                                    onChange={(e) => setStatus(e.target.value)} 
+                                    required
+                                >
+                                    <option value="" disabled>Status seçin</option>
+                                    <option value="Prosesdedir">Prosesdedir</option>
+                                    <option value="Riskdə">Riskdə</option>
+                                    <option value="Gecikmiş">Gecikmiş</option>
+                                </select>
+                                {errors.Status && <span className='error'>{errors.Status[0]}</span>} 
+                            </div>
+                            <div className="pop_order_mid_inp">
+                                <label htmlFor="priority">Prioritet</label>
+                                <select 
+                                    value={priority} 
+                                    onChange={(e) => setPriority(e.target.value)} 
+                                    required
+                                >
+                                    <option value="" disabled>Prioritet seçin</option>
+                                    <option value="Aşağı">Aşağı</option>
+                                    <option value="Orta">Orta</option>
+                                    <option value="Yüksək">Yüksək</option>
+                                </select>
+                                {errors.Priority && <span className='error'>{errors.Priority[0]}</span>} 
                             </div>
                         </div>
+                        <div className="pop_order_mid_inp">
+                            <label htmlFor="deadLine">Son Tarix</label>
+                            <input 
+                                type="date" 
+                                value={deadLine} 
+                                onChange={(e) => setDeadLine(e.target.value)} 
+                            />
+                            {errors.DeadLine && <span className='error'>{errors.DeadLine[0]}</span>} 
+                        </div>
+                        <button className='pop_order_submit_btn' type="submit">Yenilə</button>
                     </form>
                 </div>
             </div>

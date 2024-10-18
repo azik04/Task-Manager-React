@@ -4,64 +4,64 @@ import { useParams } from 'react-router-dom';
 
 const CreateComment = ({ onClose }) => {
     const [message, setMessage] = useState('');
-    const { id } = useParams();  
-    const [error, setError] = useState('');
+    const { id } = useParams();
     const [errors, setErrors] = useState({});
-    
-    const userId = localStorage.getItem('UserId'); 
-    
-    console.log("userId:", userId); 
+
+    const userId = localStorage.getItem('UserId');
 
     const fetchPost = async () => {
+        setErrors({});
         const commentData = {
-            message: message,   
-            taskId: id,     
-            userId: userId  
+            message: message,
+            taskId: id,
+            userId: userId
         };
-        console.log("Göndəriləcək məlumat:", commentData);  
 
         try {
             const response = await axios.post(`https://localhost:7146/api/Comment`, commentData);
-            console.log("Şərh uğurla yaradıldı", response.data);
-            onClose(); 
+            onClose();
             window.location.reload();
         } catch (error) {
-            if (error.response && error.response.data.errors) {
-                setErrors(error.response.data.errors);
-            } else {
-                setError('Gözlənilməz bir xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.');
+            if (error.response) {
+                const { data } = error.response;
+                if (data.errors) {
+                    setErrors(data.errors);
+                } else if (data.description) {
+                    setErrors({ general: data.description });
+                }
             }
         }
     };
 
     return (
-        <section className="pop" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 }}>
-            <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
-                <div className="pop-order-header">
-                    <div className="pop-order-header-name">
-                        <h2>Şərh Yaradın</h2>
+        <section className="pop">
+            <div className="pop-order">
+                {/* Header with close button */}
+                <div className="pop_order_nav">
+                    <div className="pop_order_nav_left">
+                        <p>Şərh Yaradın</p>
                     </div>
-                    <div className="pop-order-header-icon">
-                        {/* <button onClick={onClose}><img src={Photo} alt="Bağla" /></button> */}
+                    <div className="pop_order_nav_right">
+                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
-                <div className="pop-order-main">
-                    <div className="pop-order-main-one">
-                        <p>Mesaj</p>
-                        <input 
-                            type="text" 
-                            value={message} 
-                            onChange={(e) => setMessage(e.target.value)} 
-                            placeholder="Şərhinizi daxil edin" 
+
+                {/* Form content */}
+                <div className="pop_order_mid">
+                    {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
+                    <div className="pop_order_mid_inp">
+                        <label htmlFor="message">Mesaj</label>
+                        <input
+                            type="text"
+                            id="message"
+                            placeholder="Şərhinizi daxil edin"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
                         />
-                        {errors.Message && <span className="error">{errors.Message[0]}</span>} 
+                        {errors.Message && <span className="error">{errors.Message[0]}</span>}
                     </div>
-                    <div className="pop-order-main-footer">
-                        <div className="pop-order-main-footer-date"></div>
-                        <div className="pop-order-main-footer-btn">
-                            <button className='pop-order-main-footer-btn-all' onClick={fetchPost}>Tamamla</button>
-                        </div>
-                    </div>
+
+                    <button className="pop_order_submit_btn" onClick={fetchPost}>Tamamla</button>
                 </div>
             </div>
         </section>

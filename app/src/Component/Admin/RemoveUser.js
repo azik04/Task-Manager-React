@@ -16,28 +16,30 @@ const RemoveUser = ({ onClose, userId }) => {
     };
 
     return (
-        <section className="pop" style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0, 0, 0, 0.5)', zIndex: 100 }}>
-            <div className="pop-order" style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', maxWidth: '40%', maxHeight: '98%', overflowY: 'auto' }}>
-                <div className="pop-order-header">
-                    <div className="pop-order-header-name">
-                        <h2>İstifadəçini Sil</h2>
+        <section className="pop">
+            <div className="pop-order">
+                {/* Header with close button */}
+                <div className="pop_order_nav">
+                    <div className="pop_order_nav_left">
+                        <p>İstifadəçi Yarat</p>
                     </div>
-                    <div className="pop-order-header-icon">
-                        {/* <button onClick={onClose}><img src={Photo} alt="Close" /></button> */}
+                    <div className="pop_order_nav_right">
+                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
-                <div className="pop-order-main">
-                    <p>Bu istifadəçini silmək istəyirsiniz?</p>
-                    <div className="pop-order-main-footer">
-                        <div className="pop-order-main-footer-date">
-                        </div>
-                        <div className="pop-order-main-footer-btn">
-                            <button className='pop-order-main-footer-btn-all' onClick={handleRemove}>Sil</button>
-                        </div>
+
+               
+                <div className="pop_order_mid">
+                    <div className="pop_order_mid_inp">
+                        <p>Are you shure you want to remove this user??</p>
+                    </div>
+                    <div className='pop_order_footer'>
+                        <button className="rem_btn" onClick={handleRemove}>Sil</button>
                     </div>
                 </div>
             </div>
         </section>
+    
     );
 };
 

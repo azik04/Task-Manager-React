@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 
 const TaskUser = () => {
     const [items, setItems] = useState([]);
     const { id } = useParams();
     const userId = localStorage.getItem('UserId'); 
+    const location = useLocation(); // Get current location
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +29,11 @@ const TaskUser = () => {
             </div>
 
             {items.map((item) => (
-                <Link to={`/Task/${item.id}`} key={item.id} className="header-themes-one">
+                <Link 
+                    to={`/Task/${item.id}`} 
+                    key={item.id} 
+                    className={`header-themes-one ${location.pathname === `/Task/${item.id}` ? 'active' : ''}`} // Add active class
+                >
                     <div className="header-themes-one-left">
                         <i className="fa-solid fa-address-card"></i>
                         <p>{item.taskName}</p>

@@ -83,6 +83,9 @@ body {
     transition: 0.5s;
     margin-bottom: 5px;
 }
+.header-menu-one.active {
+    background-color: #EAEEF4; 
+}
 .header-menu-one:hover{
     background-color: #EAEEF4;
 }
@@ -140,7 +143,9 @@ body {
     justify-content: space-between;
     border-bottom: 1px solid #EAEEF4;
 }
-
+.header-themes-one:active{
+    background-color: #007BFF;
+}
 .header-themes-one-left {
     display: flex;
     align-items: center;
@@ -174,9 +179,7 @@ body {
 .header-themes-one:hover {
     background-color: #E3F2FD; 
 }
-.header-menu-one.active {
-    background-color: #E3F2FD; /* Change background color */
-}
+
 .header-themes-one.active {
     background-color: #E3F2FD; /* Change background color */
     color: #007BFF; /* Change text color */
@@ -201,7 +204,6 @@ body {
 }
 
 .header-themes-one.active {
-    background-color: #FFEBCC; 
     color: #FFFFFF; 
 }
 .more {
@@ -520,7 +522,6 @@ th, td {
     height: auto; 
     margin: 30px 50px;
     display: flex;
-    justify-content: space-between; 
     align-items: flex-start; 
     gap: 20px; 
     flex-wrap: wrap;
@@ -536,7 +537,7 @@ th, td {
 }
 
 .info_file {
-    flex: 0 0 26%;  
+    flex: 0 0 30%;  
     border-radius: 8px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden; 
@@ -545,11 +546,12 @@ th, td {
 }
 
 .info_add {
-    flex: 0 0 26%; 
+    flex: 0 0 29%; 
     background-color: white; 
     border-radius: 8px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding-bottom: 20px;
+    margin-left: 60px;
 }
 
 .info_comment_header {
@@ -811,4 +813,45 @@ th, td {
 
 .pop_order_submit_btn:hover {
     background-color: rgb(220, 80, 30);
+}
+.rem_btn{
+    width: 150px;
+    padding: 14px;
+    background-color: rgb(103, 9, 39);
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+.rem_btn:hover{
+    background-color: rgb(220, 80, 30);
+}
+.pop_order_footer{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+.sub_task{
+    margin: 0px 50px ;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.subTask_one{
+    width: 52%;
+}
+.subTask_one_p{
+    font-size: 20px;
+    font-weight: bold;
+} 
+.subTask_one table{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+.add_sub{
+    font-size: 20px;
+    cursor: pointer;
 }
