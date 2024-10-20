@@ -11,8 +11,8 @@ const TaskUser = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/UserTask/${userId}/theme`);
-                setItems(res.data || []); 
+                const res = await axios.get(`https://localhost:7146/api/UserTask/User/${userId}/Task`);
+                setItems(res.data.data || []); 
                 console.log(res.data)
             } catch (error) {
                 console.error('Error fetching data', error);
@@ -20,7 +20,7 @@ const TaskUser = () => {
         };
 
         fetchData();
-    }, [id, userId]);
+    }, [userId]);
 
     return (
         <div className="header-themes">

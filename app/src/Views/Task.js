@@ -5,13 +5,12 @@ import Comment from '../Component/Comment/Comment';
 import RemoveTask from '../Component/Task/RemoveTask';
 import File from '../Component/File/File';
 import EditTask from '../Component/Task/UpdateTask';
-import UserInTask from '../Component/UserTask/UserTask';
 import SubTask from '../Component/SubTask/SubTask';
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.getFullYear() !== 1970
-        ? date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+        ? date.toLocaleDateString('az-AZ', { year: 'numeric', month: 'long', day: 'numeric' })
         : 'N/A';
 };
 
@@ -27,13 +26,12 @@ const Task = () => {
             try {
                 const res = await axios.get(`https://localhost:7146/api/Task/${id}`);
                 setDetails(res.data.data || {});
-                console.log(res.data.data)
                 if (res.data.data && res.data.data.executiveUserId) {
                     const userRes = await axios.get(`https://localhost:7146/api/User/${res.data.data.executiveUserId}`);
                     setExecutiveUserName(userRes.data.data.userName); 
                 }
             } catch (error) {
-                console.error('Error fetching task details:', error);
+                console.error('Tapşırıq detalları alınarkən xəta:', error);
             }
         };
 
@@ -55,14 +53,14 @@ const Task = () => {
                         <p className="address">{details.taskName}</p>
                     </div>
                     <div className="get_header_right">
-                        <button className="get_header_right_edt" onClick={openEditPopup}>Edit Task</button>
-                        <button className="get_header_right_rm" onClick={openRemovePopup}>Cancel Task</button>
+                        <button className="get_header_right_edt" onClick={openEditPopup}>Tapşırığı Düzəliş Et</button>
+                        <button className="get_header_right_rm" onClick={openRemovePopup}>Tapşırığı Ləğv Et</button>
                     </div>
                 </div>
                 <div className="get_middle">
                     <div className="middle_one">
                         <div className="get_middle_one">
-                            <label>Task Name</label>
+                            <label>Tapşırıq Adı</label>
                             <p>{details.taskName}</p>
                         </div>
                         <div className="get_middle_one">
@@ -70,42 +68,36 @@ const Task = () => {
                             <p>{details.status}</p>
                         </div>
                         <div className="get_middle_one">
-                            <label>Owner</label>
+                            <label>Sahib</label>
                             <p>{executiveUserName}</p>
                         </div>
                     </div>      
                     <div className="middle_one">
                         <div className="get_middle_one">
-                            <label>Priority</label>
+                            <label>Prioritet</label>
                             <p>{details.priority}</p>
                         </div>
                         <div className="get_middle_one">
-                            <label>Deadline</label>
+                            <label>Son Tarix</label>
                             <p>{formatDate(details.deadLine)}</p>
                         </div>
                     </div>   
                     <div className="get_middle_one_comment">
-                        <label>Comment</label>
+                        <label>Şərh</label>
                         <p>{details.taskDescription}</p>
                     </div>
                 </div> 
             </div>
             <div className='sub_task'>
                 <SubTask/>
-                <Comment/>
             </div>
-        <div class="info">
-            
-            <File/>
-            <UserInTask/>
-            
-        </div>  {/* Edit Task Popup */}
+            <div className="info">
+                <Comment/>
+                <File/>
+            </div>  
             {isEditPopupVisible && <EditTask id={id} onClose={closeEditPopup} />}
-            
-            {/* Remove Task Popup */}
             {remPopUp && <RemoveTask onClose={closeRemovePopup} />}
-        
-    </section>
+        </section>
     );
 };
 

@@ -9,7 +9,7 @@ const RemoveTask = ({ onClose }) => {
 
     const remTask = async () => {
         try {
-            const res = await axios.delete(`https://localhost:7146/api/Task?id=${id}`);
+            const res = await axios.delete(`https://localhost:7146/api/Task/${id}`);
             console.log(res);
             onClose(); 
             navigate('/Theme'); 
@@ -24,7 +24,7 @@ const RemoveTask = ({ onClose }) => {
             {/* Header with close button */}
             <div className="pop_order_nav">
                 <div className="pop_order_nav_left">
-                    <p>Taski Sil</p>
+                    <p>Tapşırıqı Sil</p>
                 </div>
                 <div className="pop_order_nav_right">
                     <i className="fa-solid fa-xmark" onClick={onClose}></i>
@@ -33,7 +33,7 @@ const RemoveTask = ({ onClose }) => {
 
             <div className="pop_order_mid">
                 <div className="pop_order_mid_inp">
-                    <p>Bu Taski silmək istəyirsinizmi?</p>
+                    <p>Bu Tapşırıqı silmək istəyirsinizmi?</p>
                 </div>
                 <div className='pop_order_footer'>
                     <button className="rem_btn" onClick={remTask}>Sil</button>

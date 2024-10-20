@@ -14,8 +14,7 @@ const File = () => {
     useEffect(() => {
         const fetchData = async (id) => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/File/task/${id}`);
-                console.log("Fayllar", res.data.data);
+                const res = await axios.get(`https://localhost:7146/api/File/Task/${id}`);
                 setItems(res.data.data || []);  
             } catch (error) {
                 console.error('Məlumat alınarkən xəta baş verdi', error);
@@ -44,10 +43,9 @@ const File = () => {
 
     const downloadFile = async (fileId, fileName) => {
         try {
-            const res = await axios.get(`https://localhost:7146/api/File/${fileId}`, {
+            const res = await axios.get(`https://localhost:7146/api/File/${fileId}/Download`, {
                 responseType: 'blob', 
             });
-            console.log(res)
             const fileURL = window.URL.createObjectURL(new Blob([res.data]));
             const link = document.createElement('a');
             link.href = fileURL;
@@ -63,8 +61,8 @@ const File = () => {
     return (
         <div className="info_file">
             <div className="info_comment_header">
-                <h2>File</h2>
-                <button className="create-comment-button" onClick={createPopupVisible}>Create File</button>
+                <h2>Fayl</h2>
+                <button className="create-comment-button" onClick={createPopupVisible}>Fayl Yarat</button>
             </div>
             <div className="info_comment_list">
                 {items.length > 0 ? (

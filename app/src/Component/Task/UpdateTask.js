@@ -37,7 +37,7 @@ const EditTask = ({ id, onClose }) => {
         setErrors({}); 
 
         try {
-            const res = await axios.put(`https://localhost:7146/api/Task?id=${id}`, {
+            const res = await axios.put(`https://localhost:7146/api/Task/${id}`, {
                 taskName,
                 taskDescription,
                 status,
@@ -61,7 +61,7 @@ const EditTask = ({ id, onClose }) => {
             <div className="pop-order">
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
-                        <p>Vəzifəni Düzəlt</p>
+                        <p>Tapşırıqı Düzəlt</p>
                     </div>
                     <div className="pop_order_nav_right">
                         <i className="fa-solid fa-xmark" onClick={onClose}></i>

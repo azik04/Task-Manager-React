@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useParams , Link } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
 const DoneTasks = () => {
     const [doneTasks, setDoneTasks] = useState([]);
@@ -12,11 +12,11 @@ const DoneTasks = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/Task/done?themeId=${themeId}`);
+                const res = await axios.get(`https://localhost:7146/api/Task/Done?themeId=${themeId}`);
                 setDoneTasks(res.data.data);
                 fetchUserNames(res.data.data);
             } catch (error) {
-                console.error('Error fetching done tasks:', error);
+                console.error('Tamamlanmış tapşırıqları alarkən xəta:', error);
             }
         };
         fetchTasks();
@@ -25,7 +25,7 @@ const DoneTasks = () => {
     const fetchUserNames = async (tasks) => {
         const userIds = [...new Set(tasks.map(task => task.executiveUserId))];
         if (userIds.length === 0) {
-            console.log("No user IDs found.");
+            console.log("İstifadəçi ID-ləri tapılmadı.");
             return;
         }
 
@@ -35,26 +35,27 @@ const DoneTasks = () => {
                 const response = await axios.get(`https://localhost:7146/api/User/${id}`);
                 userMap[id] = response.data.data;
             } catch (error) {
-                console.error(`Error fetching user ID ${id}:`, error);
+                console.error(`İstifadəçi ID ${id} alınarkən xəta baş verdi:`, error);
             }
         }));
 
         setUserNames(userMap);
     };
+
     return (
         <div className="more_one">
             <div className="more_one_name">
-                <h2>Complited</h2>
+                <h2>Tamamlanmış</h2>
             </div>
             <table>
                 <thead>
                     <tr>
                         <th className="tr_done"></th>
-                        <th className="tr_task">Task</th>
-                        <th className="tr_owner">Owner</th>
+                        <th className="tr_task">Tapşırıq</th>
+                        <th className="tr_owner">Sahib</th>
                         <th className="tr_status">Status</th>
-                        <th className="tr_priority">Priority</th>
-                        <th className="tr_deadline">Deadline</th>
+                        <th className="tr_priority">Prioritet</th>
+                        <th className="tr_deadline">Son Tarix</th>
                         <th className="tr_more"></th>
                     </tr>
                 </thead>
@@ -65,11 +66,11 @@ const DoneTasks = () => {
                                 <i className="fa-solid fa-circle-check"></i> 
                             </td>
                             <td className="tr_task">{task.taskName}</td>
-                            <td className="tr_owner">{userNames[task.executiveUserId]?.userName || 'Unknown'}</td>
+                            <td className="tr_owner">{userNames[task.executiveUserId]?.userName || 'Naməlum'}</td>
                             <td className="tr_status">{task.status}</td>
                             <td className="tr_priority">{task.priority}</td>
                             <td className="tr_deadline">{task.deadLine}</td>
-                            <td className="tr_more"><Link to={`/Task/${task.id}`}>More</Link></td>
+                            <td className="tr_more"><Link to={`Theme/:themeId/Task/${task.id}`}>More</Link></td>
                         </tr>
                     ))}
                 </tbody>

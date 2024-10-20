@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode'; 
 import Theme from './Theme/Theme';
-import UserTask from './UserTask/TaskUser';
+import GetThemeByUser from './UserTheme/GetThemeByUser';
 
 const Header = () => {
     const [isAdmin, setIsAdmin] = useState(false); 
@@ -47,7 +47,7 @@ const Header = () => {
                 </a>
             </div>
             <Theme />
-            <UserTask />
+            <GetThemeByUser />
         </header>
     );
 };

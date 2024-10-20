@@ -1,37 +1,34 @@
 import React from 'react';
 import axios from 'axios';
-// import Photo from '../Photos/Cancel.svg';
 
 const RemoveUser = ({ onClose, userId }) => {
     const handleRemove = async () => {
         try {
             axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
-            await axios.delete(`https://localhost:7146/api/User?id=${userId}`); 
-            console.log("User removed:", userId);
+            await axios.delete(`https://localhost:7146/api/Admin/${userId}`); 
+            console.log("İstifadəçi silindi:", userId);
             window.location.reload(); 
         } catch (error) {
-            console.error('Error removing user:', error);
+            console.error('İstifadəçini silməkdə xəta:', error);
         }
     };
 
     return (
         <section className="pop">
             <div className="pop-order">
-                {/* Header with close button */}
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
-                        <p>İstifadəçi Yarat</p>
+                        <p>İstifadəçini Sil</p>
                     </div>
                     <div className="pop_order_nav_right">
                         <i className="fa-solid fa-xmark" onClick={onClose}></i>
                     </div>
                 </div>
 
-               
                 <div className="pop_order_mid">
                     <div className="pop_order_mid_inp">
-                        <p>Are you shure you want to remove this user??</p>
+                        <p>Bu istifadəçini silmək istəyirsinizmi?</p>
                     </div>
                     <div className='pop_order_footer'>
                         <button className="rem_btn" onClick={handleRemove}>Sil</button>
@@ -39,7 +36,6 @@ const RemoveUser = ({ onClose, userId }) => {
                 </div>
             </div>
         </section>
-    
     );
 };
 

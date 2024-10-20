@@ -17,7 +17,7 @@ const Comment = () => {
     useEffect(() => {
         const fetchData = async (id) => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/Comment?taskId=${id}`);
+                const res = await axios.get(`https://localhost:7146/api/Comment/Task/${id}`);
                 const comments = res.data.data || [];
                 setItems(comments);
                 fetchUserNames(comments); 
@@ -76,8 +76,8 @@ const Comment = () => {
     return (
         <div className="info_comment">
             <div className="info_comment_header">
-                <h2>Comments</h2>
-                <button className="create-comment-button" onClick={createPopupVisible}>Create Comment</button>
+                <h2>Şərhlər</h2>
+                <button className="create-comment-button" onClick={createPopupVisible}>Şərh Yarat</button>
             </div>
             
             <div className="info_comment_list">
@@ -89,14 +89,13 @@ const Comment = () => {
                                 <p className="username">{userNames[item.userId] || 'Yüklənir...'}</p>
                                 <p className="created-at">{formatDateTime(item.createAt)}</p>
                                 <div className="comment-meta-rm">
-                                <i class="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i> 
+                                <i className="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i> 
                                 </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p className="info_comment_list_p">Heç bir comment tapılmadı</p>
-
+                    <p className="info_comment_list_p">Heç bir şərh tapılmadı</p>
                 )}
             </div>
             {isCreatePopupVisible && <CreateComment onClose={closeCreatePopupVisible} />}

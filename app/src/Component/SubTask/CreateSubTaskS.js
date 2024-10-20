@@ -29,8 +29,6 @@ const CreateSubTask = ({ onClose }) => {
                 userId: userId,
                 taskId: id
             });
-
-            console.log("Alt tapşırıq müvəffəqiyyətlə yaradıldı", res.data);
             onClose();
             window.location.reload();
         } catch (error) {

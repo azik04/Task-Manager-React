@@ -9,27 +9,47 @@ const CreateTask = ({ onClose }) => {
     const [status, setStatus] = useState('');
     const [priority, setPriority] = useState('');
     const [deadLine, setDeadLine] = useState('');
-    const [executiveUserId, setExecutiveUserId] = useState('');
-    const [users, setUsers] = useState([]);
-    const [errors, setErrors] = useState({});
+    const [executiveUserId, setExecutiveUserId] = useState(''); // Executive user ID
+    const [users, setUsers] = useState([]); // List of users
+    const [errors, setErrors] = useState({}); // Validation errors
     const today = new Date().toISOString().split('T')[0];
 
     useEffect(() => {
         const fetchUsers = async () => {
+            const requestUrl = `https://localhost:7146/api/UserTheme/Theme/${themeId}/Users`;
             try {
-                const res = await axios.get('https://localhost:7146/api/User');
-                setUsers(res.data.data || []);
+                const res = await axios.get(requestUrl);
+                setUsers(res.data.data || []); // Set users if data exists
             } catch (error) {
-                console.error(error.response.data.errors);
+                if (error.response) {
+                    console.error('Error data:', error.response.data);
+                    console.error('Error status:', error.response.status);
+                } else {
+                    console.error('Unexpected error:', error);
+                }
             }
         };
         fetchUsers();
-    }, []);
-
+    }, [themeId]);
+    
     const createTask = async (event) => {
         event.preventDefault();
-        setErrors({});
-    
+        setErrors({}); // Reset errors at the start
+
+        // Validate fields
+        let validationErrors = {};
+        if (!taskName) validationErrors.TaskName = ['Tapşırıq adı tələb olunur'];
+        if (!status) validationErrors.Status = ['Status seçilməlidir'];
+        if (!priority) validationErrors.Priority = ['Prioritet seçilməlidir'];
+        if (!deadLine) validationErrors.DeadLine = ['Son tarix tələb olunur'];
+
+        // If there are validation errors, set them and return
+        if (Object.keys(validationErrors).length > 0) {
+            setErrors(validationErrors);
+            return; // Prevent submission if there are validation errors
+        }
+
+        // Prepare the form data
         const formData = {
             TaskName: taskName,
             TaskDescription: taskDescription,
@@ -37,7 +57,7 @@ const CreateTask = ({ onClose }) => {
             Priority: priority,
             ThemeId: themeId,
             DeadLine: deadLine,
-            ExecutiveUserId: executiveUserId,
+            ...(executiveUserId && { ExecutiveUserId: executiveUserId }),
         };
     
         try {
@@ -46,13 +66,21 @@ const CreateTask = ({ onClose }) => {
                     'Content-Type': 'application/json',
                 },
             });
-            const taskId = response.data.data.id;
-            await axios.post(`https://localhost:7146/api/UserTask/${taskId}/users/${executiveUserId}`);
-            onClose();
-            window.location.reload();
+            const taskId = response.data.data.id; // Get task ID from response
+    
+            // Only call this if executiveUserId is provided
+            if (executiveUserId) {
+                await axios.post(`https://localhost:7146/api/UserTask`, {
+                    taskId: taskId,
+                    userId: executiveUserId // Send executive user ID
+                });
+            }
+            
+            onClose(); // Close the popup
+            window.location.reload(); // Reload the page
         } catch (error) {
             if (error.response && error.response.data.errors) {
-                setErrors(error.response.data.errors);
+                setErrors(error.response.data.errors); // Set validation errors from server response
             } else {
                 console.error('Unexpected error:', error);
             }
@@ -62,7 +90,6 @@ const CreateTask = ({ onClose }) => {
     return (
         <section className="pop">
             <div className="pop-order">
-                {/* Header with close button */}
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
                         <p>Tapşırıq Yarat</p>
@@ -72,7 +99,6 @@ const CreateTask = ({ onClose }) => {
                     </div>
                 </div>
 
-                {/* Form content */}
                 <div className="pop_order_mid">
                     <div className="pop_order_mid_inp">
                         <label htmlFor="taskName">Tapşırıq Adı</label>
@@ -98,7 +124,6 @@ const CreateTask = ({ onClose }) => {
                         {errors.TaskDescription && <span className="error">{errors.TaskDescription[0]}</span>}
                     </div>
 
-                    {/* Status and Priority */}
                     <div className="pop_order_mid_flex">
                         <div className="pop_order_mid_inp">
                             <label htmlFor="status">Status</label>
@@ -131,7 +156,6 @@ const CreateTask = ({ onClose }) => {
                         </div>
                     </div>
 
-                    {/* Deadline and Executive User */}
                     <div className="pop_order_mid_flex">
                         <div className="pop_order_mid_inp">
                             <label htmlFor="deadLine">Son Tarix</label>
@@ -146,11 +170,11 @@ const CreateTask = ({ onClose }) => {
                         </div>
 
                         <div className="pop_order_mid_inp">
-                            <label htmlFor="executiveUserId">İcraçı</label>
-                            <select
-                                id="executiveUserId"
-                                value={executiveUserId}
-                                onChange={(e) => setExecutiveUserId(e.target.value)}
+                            <label htmlFor="executiveUserId">İcraçı (Not Required)</label>
+                            <select 
+                                id="executiveUserId" 
+                                value={executiveUserId} 
+                                onChange={(e) => setExecutiveUserId(e.target.value)} 
                             >
                                 <option value="" disabled>İcraçı istifadəçi seçin</option>
                                 {users.map((user) => (
@@ -159,10 +183,10 @@ const CreateTask = ({ onClose }) => {
                                     </option>
                                 ))}
                             </select>
+                            {errors.ExecutiveUserId && <span className="error">{errors.ExecutiveUserId[0]}</span>}
                         </div>
                     </div>
 
-                    {/* Submit button */}
                     <button className="pop_order_submit_btn" onClick={createTask}>Tamamla</button>
                 </div>
             </div>

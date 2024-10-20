@@ -17,10 +17,10 @@ const Admins = () => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
         const fetchAdmins = async () => {
             try {
-                const adminRes = await axios.get('https://localhost:7146/api/User/Admins');
+                const adminRes = await axios.get('https://localhost:7146/api/Admin/Admins');
                 setAdmins(adminRes.data.data || []);
             } catch (error) {
-                console.error('Error fetching admins:', error);
+                console.error('Adminlərin alınmasında səhv:', error);
             }
         };
         fetchAdmins();
@@ -35,11 +35,11 @@ const Admins = () => {
         <div className="more_one">
             <div className="more_one_all">
                 <div className="more_one_name">
-                    <h2>Admins</h2>
+                    <h2>Adminlər</h2>
                 </div>
                 <button className="more_one_name_btn" onClick={togglePopup}>
-                    <p>Create User</p>
-                    <i class="fa-solid fa-user-plus"></i>
+                    <p>Istifadəçi yarat</p>
+                    <i className="fa-solid fa-user-plus"></i>
                 </button>
             </div>
 
@@ -51,11 +51,11 @@ const Admins = () => {
             <table>
                 <thead>
                     <tr>
-                        <th className="tr_task">UserName</th>
-                        <th className="tr_owner">UserEmail</th>
-                        <th className="tr_status">Change Email</th>
-                        <th className="tr_psw">Change Password</th>
-                        <th className="tr_dlt">Delete</th>
+                        <th className="tr_task">İstifadəçi Adı</th>
+                        <th className="tr_owner">İstifadəçi E-poçtu</th>
+                        <th className="tr_status">E-poçtu Dəyiş</th>
+                        <th className="tr_psw">Şifrəni Dəyiş</th>
+                        <th className="tr_dlt">Sil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,11 +65,11 @@ const Admins = () => {
                             <td className="tr_owner">{admin.email}</td>
                             <td className="tr_status">
                                 <button onClick={() => { setCurrentUserId(admin.id); toggleChangeEmail(); }}>
-                                    Change Email
+                                    E-poçtu Dəyiş
                                 </button>
                             </td>
                             <td className="tr_psw">
-                                <button onClick={() => { setCurrentUserId(admin.id); toggleChangePassword(); }}>Change Password</button>
+                                <button onClick={() => { setCurrentUserId(admin.id); toggleChangePassword(); }}>Şifrəni Dəyiş</button>
                             </td>
                             <td className="tr_dlt">
                                 <i className="fa-regular fa-trash-can delete-icon" onClick={() => { setCurrentUserId(admin.id); toggleRemoveUser(); }}></i>

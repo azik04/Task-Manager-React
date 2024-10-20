@@ -56,13 +56,6 @@ const CreateTheme = ({ onClose }) => {
 
                 {/* Form content */}
                 <div className="pop_order_mid">
-                    {errors.length > 0 && (
-                        <div className="error">
-                            {errors.map((error, index) => (
-                                <span key={index} style={{ color: 'red' }}>{error}</span>
-                            ))}
-                        </div>
-                    )}
                     <div className="pop_order_mid_inp">
                         <label htmlFor="name">Ad</label>
                         <input
@@ -72,6 +65,9 @@ const CreateTheme = ({ onClose }) => {
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                         />
+                             {errors.map((error, index) => (
+                                <span key={index} style={{ color: 'red' ,  fontSize: "13px"  }}>{error}</span>
+                            ))}
                     </div>
 
                     <button className="pop_order_submit_btn" onClick={fetchNew}>Tamamla</button>

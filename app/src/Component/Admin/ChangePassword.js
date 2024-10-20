@@ -12,7 +12,7 @@ const ChangePassword = ({ onClose, userId }) => {
         axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
         try {
-            const res = await axios.put(`https://localhost:7146/api/User/ChangePassword?id=${userId}`, {
+            const res = await axios.put(`https://localhost:7146/api/Admin/${userId}/ChangePassword`, {
                 oldPassword: currentPassword,
                 newPassword: newPassword
             });

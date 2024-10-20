@@ -4,7 +4,7 @@ import axios from 'axios';
 const RemoveComment = ({ onClose, commentId }) => {
     const remItem = async () => {
         try {
-            const response = await axios.delete(`https://localhost:7146/api/Comment?id=${commentId}`);
+            const response = await axios.delete(`https://localhost:7146/api/Comment/${commentId}`);
             console.log('Şərh uğurla silindi', response.data);
             onClose();
             window.location.reload();

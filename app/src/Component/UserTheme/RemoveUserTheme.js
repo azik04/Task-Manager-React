@@ -1,11 +1,15 @@
 import React from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const RemoveUserFromTask = ({ onClose, id }) => { // Изменено removeId на id
+const RemoveUserFromTheme = ({ onClose, id, onUserRemoved }) => {
+    const { themeId } = useParams(); 
+
     const handleRemove = async () => {
         try {
-            await axios.delete(`https://localhost:7146/api/UserTask/${id}`); // Используем id
-            window.location.reload(); 
+            await axios.delete(`https://localhost:7146/api/UserTheme/Theme/${themeId}/User/${id}`);
+            onUserRemoved(id); 
+            onClose();
         } catch (error) {
             console.error('Error removing user:', error);
         }
@@ -14,7 +18,6 @@ const RemoveUserFromTask = ({ onClose, id }) => { // Изменено removeId �
     return (
         <section className="pop">
             <div className="pop-order">
-                {/* Header with close button */}
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
                         <p>Taskdan İstifadəçini Sil</p>
@@ -37,4 +40,4 @@ const RemoveUserFromTask = ({ onClose, id }) => { // Изменено removeId �
     );
 };
 
-export default RemoveUserFromTask;
+export default RemoveUserFromTheme;

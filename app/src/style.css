@@ -206,6 +206,37 @@ body {
 .header-themes-one.active {
     color: #FFFFFF; 
 }
+.tr_done{
+    width: 50px;
+}
+.gear-div {
+    padding:10px 10px 0px 10px ;
+    border: 1px solid #aaa; 
+    background-color: white;
+    border-radius: 5px;
+    z-index: 10; 
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 200px;
+}
+
+.gear-div button {
+    width: 100%;
+    padding: 7px 0px;
+    border: 0px;
+    cursor: pointer;
+    background-color: #0073ea; 
+    background-image: linear-gradient(45deg, #005bb5, #003f8a); 
+    color: white;
+    border-radius: 3px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 10px;
+}
+
+.gear-div button:hover {
+    background-color: #004494;
+    transform: scale(1.05);
+}
+
 .more {
     flex-grow: 1; 
     margin-left: 300px; 
@@ -528,7 +559,7 @@ th, td {
 }
 
 .info_comment {
-    flex: 0 0 45%; 
+    flex: 0 0 44%; 
     background-color: white; 
     border-radius: 8px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
@@ -537,7 +568,7 @@ th, td {
 }
 
 .info_file {
-    flex: 0 0 30%;  
+    flex: 0 0 25%;  
     border-radius: 8px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     overflow: hidden; 
@@ -546,12 +577,11 @@ th, td {
 }
 
 .info_add {
-    flex: 0 0 29%; 
+    flex: 0 0 25%; 
     background-color: white; 
     border-radius: 8px; 
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     padding-bottom: 20px;
-    margin-left: 60px;
 }
 
 .info_comment_header {
@@ -840,7 +870,7 @@ th, td {
     justify-content: space-between;
 }
 .subTask_one{
-    width: 52%;
+    width: 100%;
 }
 .subTask_one_p{
     font-size: 20px;
@@ -854,4 +884,15 @@ th, td {
 .add_sub{
     font-size: 20px;
     cursor: pointer;
+}
+.pop_order_mid_user{
+    display: flex;
+    padding: 5px 0px;
+    border-bottom: 1px solid #d1d9e6;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 15px;
+}
+.pop_order_mid_user i {
+    font-size: 18px;
 }

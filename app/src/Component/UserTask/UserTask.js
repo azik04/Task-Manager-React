@@ -14,8 +14,8 @@ const UserInTask = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/UserTask/${id}/users`);
-                setItems(res.data || []);
+                const res = await axios.get(`https://localhost:7146/api/User/Task/${id}/Unassigned`);
+                setItems(res.data.data || []);  
             } catch (error) {
                 console.error('Error fetching data', error);
             }
@@ -32,13 +32,14 @@ const UserInTask = () => {
         setCreatePopupVisible(false);
     };
 
-    const openRemovePopup = (userId) => {
-        setRemoveId(userId);
+    const openRemovePopup = (userTaskId) => { 
+        setRemoveId(userTaskId);
         setRemovePopupVisible(true);
     };
 
     const closeRemovePopup = () => {
         setRemovePopupVisible(false);
+        setRemoveId(null); 
     };
 
     return (
@@ -52,13 +53,13 @@ const UserInTask = () => {
             <div className="info_comment_list">
                 {items.length > 0 ? (
                     items.map((item) => (
-                        <div className="info_comment_item" key={item.id}>
+                        <div className="info_comment_item" key={item.userTaskId}> 
                             <div className="comment-meta-header">
                                 <p className="comment-text">{item.userName}</p>
                                 <div className="comment-meta-rm">
                                     <i
                                         className="fa-regular fa-trash-can delete-icon"
-                                        onClick={() => openRemovePopup(item.id)}
+                                        onClick={() => openRemovePopup(item.id)} 
                                     ></i>
                                 </div>
                             </div>
@@ -70,7 +71,7 @@ const UserInTask = () => {
             </div>
             {isCreatePopupVisible && <AddToTask onClose={closeCreatePopup} taskId={id} />}
             {isRemovePopupVisible && removeId !== null && (
-                <RemoveUserFromTask onClose={closeRemovePopup} userId={removeId} taskId={id} />
+                <RemoveUserFromTask onClose={closeRemovePopup} id={removeId} /> 
             )}
         </div>
     );

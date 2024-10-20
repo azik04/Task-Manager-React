@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams , Link } from 'react-router-dom';
-import CreateTask from './CreateTask'; // Adjust the path as necessary
+import { useParams, Link } from 'react-router-dom';
+import CreateTask from './CreateTask'; // Yolunuzu lazımi olaraq düzəldin
 
 const NotDoneTasks = () => {
     const [notDoneTasks, setNotDoneTasks] = useState([]);
@@ -14,11 +14,11 @@ const NotDoneTasks = () => {
     useEffect(() => {
         const fetchTasks = async () => {
             try {
-                const res = await axios.get(`https://localhost:7146/api/Task/notdone?themeId=${themeId}`);
+                const res = await axios.get(`https://localhost:7146/api/Task/NotDone?themeId=${themeId}`);
                 setNotDoneTasks(res.data.data);
                 fetchUserNames(res.data.data);
             } catch (error) {
-                console.error('Error fetching not done tasks:', error);
+                console.error('Tamamlanmamış tapşırıqları alarkən xəta:', error);
             }
         };
         fetchTasks();
@@ -28,7 +28,7 @@ const NotDoneTasks = () => {
         const userIds = [...new Set(tasks.map(task => task.executiveUserId))];
 
         if (userIds.length === 0) {
-            console.log("No user IDs found.");
+            console.log("İstifadəçi ID-ləri tapılmadı.");
             return;
         }
 
@@ -38,7 +38,7 @@ const NotDoneTasks = () => {
                 const response = await axios.get(`https://localhost:7146/api/User/${id}`);
                 userMap[id] = response.data.data;
             } catch (error) {
-                console.error(`Error fetching user ID ${id}:`, error);
+                console.error(`İstifadəçi ID ${id} alınarkən xəta baş verdi:`, error);
             }
         }));
 
@@ -47,12 +47,12 @@ const NotDoneTasks = () => {
 
     const completeTask = async (id) => {
         try {
-            const res = await axios.put(`https://localhost:7146/api/Task/complite/${id}`);
-            console.log('Task completed:', res.data);
-            setNotDoneTasks(prevTasks => prevTasks.filter(task => task.id !== id)); 
-            window.location.reload()
+            const res = await axios.put(`https://localhost:7146/api/Task/${id}/Complite`);
+            console.log('Tapşırıq tamamlandı:', res.data);
+            setNotDoneTasks(prevTasks => prevTasks.filter(task => task.id !== id));
+            window.location.reload();
         } catch (error) {
-            console.error('Error completing task:', error.response ? error.response.data : error.message);
+            console.error('Tapşırığı tamamlarkən xəta:', error.response ? error.response.data : error.message);
         }
     };
 
@@ -64,10 +64,10 @@ const NotDoneTasks = () => {
         <div className="more_one">
             <div className="more_one_all">
                 <div className="more_one_name">
-                    <h2>To-Do</h2>
+                    <h2>Görüləcək</h2>
                 </div>
                 <button className="more_one_name_btn" onClick={togglePopup}>
-                    <p>Create Task</p>
+                    <p>Tapşırıq Yarat</p>
                     <i className="fa-solid fa-thumbtack"></i>
                 </button>
             </div>
@@ -78,11 +78,11 @@ const NotDoneTasks = () => {
                 <thead>
                     <tr>
                         <th className="tr_notdone"></th>
-                        <th className="tr_task">Task</th>
-                        <th className="tr_owner">Owner</th>
+                        <th className="tr_task">Tapşırıq</th>
+                        <th className="tr_owner">Sahib</th>
                         <th className="tr_status">Status</th>
-                        <th className="tr_priority">Priority</th>
-                        <th className="tr_deadline">Deadline</th>
+                        <th className="tr_priority">Prioritet</th>
+                        <th className="tr_deadline">Son Tarix</th>
                         <th className="tr_more"></th>
                     </tr>
                 </thead>
@@ -93,11 +93,11 @@ const NotDoneTasks = () => {
                                 <i className="fa-solid fa-circle-check" onClick={() => completeTask(task.id)}></i>
                             </td>
                             <td className="tr_task">{task.taskName}</td>
-                            <td className="tr_owner">{userNames[task.executiveUserId]?.userName || 'Unknown'}</td>
+                            <td className="tr_owner">{userNames[task.executiveUserId]?.userName || 'Naməlum'}</td>
                             <td className="tr_status">{task.status}</td>
                             <td className="tr_priority">{task.priority}</td>
                             <td className="tr_deadline">{task.deadLine}</td>
-                            <td className="tr_more"><Link to={`/Task/${task.id}`}>More</Link></td>
+                            <td className="tr_more"><Link to={`/Theme/${themeId}/Task/${task.id}`}>More</Link></td>
                         </tr>
                     ))}
                 </tbody>

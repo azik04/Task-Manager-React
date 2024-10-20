@@ -18,10 +18,10 @@ const Users = () => {
         
         const fetchUsers = async () => {
             try {
-                const userRes = await axios.get('https://localhost:7146/api/User/Users');
+                const userRes = await axios.get('https://localhost:7146/api/Admin/User');
                 setUsers(userRes.data.data || []);
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('İstifadəçilərin alınmasında səhv:', error);
             }
         };
         fetchUsers();
@@ -35,7 +35,7 @@ const Users = () => {
     return (
         <div className="more_one">
             <div className="more_one_name">
-                <h2>Users</h2>
+                <h2>İstifadəçilər</h2>
             </div>
 
             {isChangeEmailOpen && <ChangeEmail onClose={toggleChangeEmail} userId={currentUserId} />}
@@ -46,12 +46,12 @@ const Users = () => {
             <table>
                 <thead>
                     <tr>
-                        <th className="tr_task">UserName</th>
-                        <th className="tr_owner">UserEmail</th>
-                        <th className="tr_status">Change Email</th>
-                        <th className="tr_psw">Change Password</th>
-                        <th className="tr_role">Change Role</th> 
-                        <th className="tr_dlt">Delete</th>
+                        <th className="tr_task">İstifadəçi Adı</th>
+                        <th className="tr_owner">İstifadəçi E-poçtu</th>
+                        <th className="tr_status">E-poçtu Dəyiş</th>
+                        <th className="tr_psw">Şifrəni Dəyiş</th>
+                        <th className="tr_role">Rolu Dəyiş</th> 
+                        <th className="tr_dlt">Sil</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,14 +61,14 @@ const Users = () => {
                             <td className="tr_owner">{user.email}</td>
                             <td className="tr_status">
                                 <button onClick={() => { setCurrentUserId(user.id); toggleChangeEmail(); }}>
-                                    Change Email
+                                    E-poçtu Dəyiş
                                 </button>
                             </td>
                             <td className="tr_psw">
-                                <button onClick={() => { setCurrentUserId(user.id); toggleChangePassword(); }}>Change Password</button>
+                                <button onClick={() => { setCurrentUserId(user.id); toggleChangePassword(); }}>Şifrəni Dəyiş</button>
                             </td>
                             <td className="tr_role">
-                                <button onClick={() => { setCurrentUserId(user.id); toggleChangeRole(); }}>Change Role</button>
+                                <button onClick={() => { setCurrentUserId(user.id); toggleChangeRole(); }}>Rolu Dəyiş</button>
                             </td>
                             <td className="tr_dlt">
                                 <i className="fa-regular fa-trash-can delete-icon" onClick={() => { setCurrentUserId(user.id); toggleRemoveUser(); }}></i>
