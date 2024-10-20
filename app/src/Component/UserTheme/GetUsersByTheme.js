@@ -40,7 +40,7 @@ const GetUsersByTheme = ({ onClose, themeId }) => {
             <div className="pop-order">
                 <div className="pop_order_nav">
                     <div className="pop_order_nav_left">
-                        <p>Users in Theme</p>
+                        <p>Layihədə İstifadəçilər</p>
                     </div>
                     <div className="pop_order_nav_right">
                         <i className="fa-solid fa-xmark" onClick={onClose}></i>
@@ -70,7 +70,7 @@ const GetUsersByTheme = ({ onClose, themeId }) => {
                 <RemoveUserFromTheme
                     onClose={handleCloseRemovePopup}
                     id={selectedUserId}
-                    onUserRemoved={handleUserRemoved} // Pass the handler
+                    onUserRemoved={handleUserRemoved}
                 />
             )}
         </section>
