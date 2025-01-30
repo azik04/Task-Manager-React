@@ -7,8 +7,6 @@ import EditSubTask from './EditSubTask';
 
 const SubTask = () => {
     const [notDoneTasks, setNotDoneTasks] = useState([]);
-    const [doneTasks, setDoneTasks] = useState([]);
-    const [isCreatePopupVisible, setCreatePopupVisible] = useState(false);
     const [editTaskId, setEditTaskId] = useState(null);
     const [isEditPopupVisible, setEditPopupVisible] = useState(false);
     const [isRemovePopupVisible, setRemovePopupVisible] = useState(false);
@@ -20,9 +18,9 @@ const SubTask = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const notDoneRes = await axios.get(`https://localhost:7146/api/SubTask/Task/${id}/NotDone`);
+                const notDoneRes = await axios.get(`https://localhost:7146/api/SubTask/Task/${id}/Done`);
                 setNotDoneTasks(notDoneRes.data.data || []);
-                console.log("not done" , notDoneRes.data.data);
+                console.log(notDoneRes.data.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
@@ -42,8 +40,6 @@ const SubTask = () => {
         }
     };
 
-    const openCreatePopup = () => setCreatePopupVisible(true);
-    const closeCreatePopup = () => setCreatePopupVisible(false);
     const openRemovePopup = (subtaskId) => {
         setRemoveId(subtaskId);
         setRemovePopupVisible(true);
@@ -54,12 +50,8 @@ const SubTask = () => {
         <div className='subTask_one'>
             <div className="more_one_all">
                 <div className="more_one_name">
-                    <h2>Görüləcək</h2>
+                    <h2>Tamamlanmamış</h2>
                 </div>
-                <button className="more_one_name_btn" onClick={openCreatePopup}>
-                    <p>Tapşırıq Yarat</p>
-                    <i className="fa-solid fa-thumbtack"></i>
-                </button>
             </div>
 
             <table>
@@ -102,7 +94,7 @@ const SubTask = () => {
                 </tbody>
             </table>
 
-            {isCreatePopupVisible && <CreateSubTask onClose={closeCreatePopup} />}
+
             {isEditPopupVisible && editTaskId && (
                 <EditSubTask
                     id={editTaskId}

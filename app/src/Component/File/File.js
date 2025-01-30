@@ -15,6 +15,7 @@ const File = () => {
         const fetchData = async (id) => {
             try {
                 const res = await axios.get(`https://localhost:7146/api/File/Task/${id}`);
+                console.log("File", res.data.data)
                 setItems(res.data.data || []);  
             } catch (error) {
                 console.error('Məlumat alınarkən xəta baş verdi', error);
@@ -61,28 +62,23 @@ const File = () => {
     return (
         <div className="info_file">
             <div className="info_comment_header">
-                <h2>Fayl</h2>
+                <p>Fayl</p>
                 <button className="create-comment-button" onClick={createPopupVisible}>Fayl Yarat</button>
             </div>
             <div className="info_comment_list">
-                {items.length > 0 ? (
-                    items.map((item) => (
-                        <div className="info_comment_item" key={item.id}>
-                            <div className="comment-meta-header">
-                                <p className="comment-text">
-                                    <a href="#" onClick={() => downloadFile(item.id, item.fileName)}>
-                                        {item.fileName}
-                                    </a>
-                                </p>
-                                <div className="comment-meta-rm">
-                                    <i className="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i>
-                                </div>
-                            </div>
+                <div className="info_comment_item">
+                {items && items.length > 0 ? (
+                    items.map(item => (
+                        <div className="comment-meta-header">
+                            <a href="#" className="file-text"  onClick={() => downloadFile(item.id, item.fileName)}>{item.fileName}</a>
+                            <button className="comment-meta-rm" onClick={() => removePopupVisible(item.id)}><i className="fa-regular fa-trash-can delete-icon"></i></button>
                         </div>
                     ))
                 ) : (
-                    <p className="info_comment_list">Heç bir fayl tapılmadı</p>
+                    <div style={{ textAlign: 'center', margin: '11px 0' }}>No file found</div>
                 )}
+                    
+                </div>
             </div>
             {isCreatePopupVisible && <CreateFile onClose={closeCreatePopupVisible} />}
             {isRemovePopupVisible && removeId !== null && <RemoveFile onClose={closeRemovePopupVisible} documentId={removeId} />}

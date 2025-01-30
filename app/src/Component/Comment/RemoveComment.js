@@ -14,25 +14,18 @@ const RemoveComment = ({ onClose, commentId }) => {
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Şərhi Sil</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
+        <section className="popup-overlay">
+            <div className="popup-container-rem">
+                <div className="popup-header">
+                    <h3>Kanalı Sil</h3>
+                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
                 </div>
-
-                <div className="pop_order_mid">
-                    <div className="pop_order_mid_inp">
-                        <p>Bu şərhi silmək istəyirsinizmi?</p>
-                    </div>
-                    <div className='pop_order_footer'>
-                        <button className="rem_btn" onClick={remItem}>Sil</button>
-                    </div>
+                <div className="popup-content">
+                    <p>Bu kanalı silmək istədiyinizə əminsinizmi?</p>
+                </div>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={onClose}>Xeyr</button>
+                    <button className="submit-btn" onClick={remItem}>Bəli</button>
                 </div>
             </div>
         </section>

@@ -1,78 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-const AddToTheme = ({ onClose, themeId }) => {
-    const [users, setUsers] = useState([]);
-    const [selectedUserId, setSelectedUserId] = useState('');
-    const userId = localStorage.getItem('UserId'); 
+const AddToTheme = ({ close, kanalId }) => {
+    const [userId, setUserId] = useState("");
+    const [data, setData] = useState([]);
+
+    axios.defaults.headers.common["Authorization"] = `Bearer ${localStorage.getItem("JWT")}`;
 
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                if (!userId) {
-                    throw new Error('İstifadəçi ID-si yerli yaddaşda tapılmadı.');
-                }
-                const res = await axios.get(`https://localhost:7146/api/User/Theme/${themeId}/Unassigned?userId=${userId}`);
-                setUsers(res.data.data || []);
+                const res = await axios.get("https://localhost:7146/api/Admin/User");
+                console.log(res.data.data)
+                setData(res.data.data);
             } catch (error) {
-                console.error('İstifadəçiləri əldə edərkən xəta:', error);
+                console.error("Error fetching users:", error);
             }
         };
 
         fetchUsers();
-    }, [themeId, userId]); 
+    }, []);
 
-    const storedUserId = localStorage.getItem("UserId");
-    const handleAddToTask = async () => {
-        const payload = {
-            themeId: themeId,
-            userId: selectedUserId, 
-            createdByUserId: storedUserId
-        };
+    const addToChannel = async () => {
         try {
-            await axios.post(`https://localhost:7146/api/UserTheme`, payload);
-            onClose();
+            const payload = {
+                themeId: Number(kanalId), 
+                userId: Number(userId),
+            };
+            console.log("Payload being sent:", payload);
+    
+            const res = await axios.post("https://localhost:7146/api/UserTheme", payload);
+            console.log("User added to theme successfully:", res.data);
+    
             window.location.reload();
+            close();
         } catch (error) {
-            console.error('İstifadəçini tapşırığa əlavə edərkən xəta:', error);
+            console.error("Error response:", error.response?.data || error.message);
         }
     };
-
+    
     return (
-        <section className="pop">
-            <div className="pop-order">
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>İstifadəçini Layihəyə Əlavə Et</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
+        <section className="popup-overlay">
+            <div className="popup-container-rem">
+                <div className="popup-header">
+                    <h3>İstifadəçini Kanala Əlavə Et</h3>
+                    <i className="fa-solid fa-xmark" onClick={close}></i>
                 </div>
-
-                <div className="pop_order_mid">
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="userSelect">İstifadəçi Seçin:</label>
-                        <select 
-                            id="userSelect" 
-                            onChange={(e) => setSelectedUserId(e.target.value)} 
-                            value={selectedUserId}
-                        >
-                            <option value="" disabled>Bir istifadəçi seçin</option>
-                            {users.length > 0 ? (
-                                users.map((user) => (
-                                    <option key={user.id} value={user.id}>
-                                        {user.userName}
-                                    </option>
-                                ))
-                            ) : (
-                                <option value="" disabled>İstifadəçilər mövcud deyil</option>
-                            )}
-                        </select>
-                    </div>
-
-                    <button className="pop_order_submit_btn" onClick={handleAddToTask}>Tamamla</button>
+                <div className="popup-content">
+                    <select onChange={(e) => setUserId(e.target.value)} value={userId}>
+                        <option value="">Select a User</option>
+                        {data.map((user) => (
+                            <option key={user.id} value={user.id}>
+                                {user.fullName}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={close}>
+                        İmtina Et
+                    </button>
+                    <button className="submit-btn" onClick={addToChannel}>
+                        Əlavə Et
+                    </button>
                 </div>
             </div>
         </section>

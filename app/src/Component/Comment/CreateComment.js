@@ -1,67 +1,67 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode'; 
 
 const CreateComment = ({ onClose }) => {
     const [message, setMessage] = useState('');
     const { id } = useParams();
-    const [errors, setErrors] = useState({});
+    const [error, setErrors] = useState({});
 
-    const userId = localStorage.getItem('UserId');
 
     const fetchPost = async () => {
         setErrors({});
-        const commentData = {
-            message: message,
-            taskId: id,
-            userId: userId
-        };
-
         try {
-            const response = await axios.post(`https://localhost:7146/api/Comment`, commentData);
+            const token = localStorage.getItem('JWT');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken?.UserId;
+    
+            const commentData = {
+                message: message,
+                taskId: id,
+                userId: userId,
+            };
+            await axios.post(`https://localhost:7146/api/Comment`,commentData);
             onClose();
             window.location.reload();
         } catch (error) {
-            if (error.response) {
-                const { data } = error.response;
-                if (data.errors) {
-                    setErrors(data.errors);
-                } else if (data.description) {
-                    setErrors({ general: data.description });
-                }
-            }
+            console.error('Error posting comment:', error.response.data.errors);
+            setErrors(error.response.data.errors)
         }
     };
-
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Şərh Yaradın</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
+        <section className="popup-overlay">
+            <div className="popup-container">
+                <div className="popup-header">
+                    <h3>Create Comment</h3>
+                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
+                </div>
+
+                <div className="popup-content">
+                    <div className="input-group">
+                        <div className="input-half">
+                            <label htmlFor="channel-name">Create Comment</label>
+                            <input
+                                type="text"
+                                id="channel-name"
+                                placeholder="Enter Comment"
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                            />
+                              <span className={`errors ${error?.Message?.[0] ? 'visible' : ''}`}>
+                                {error?.Message?.[0]}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Form content */}
-                <div className="pop_order_mid">
-                    {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="message">Mesaj</label>
-                        <input
-                            type="text"
-                            id="message"
-                            placeholder="Şərhinizi daxil edin"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                        />
-                        {errors.Message && <span className="error">{errors.Message[0]}</span>}
-                    </div>
-
-                    <button className="pop_order_submit_btn" onClick={fetchPost}>Tamamla</button>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={onClose}>
+                        Cancel
+                    </button>
+                    <button className="submit-btn" onClick={fetchPost}>
+                        Submit
+                    </button>
                 </div>
             </div>
         </section>

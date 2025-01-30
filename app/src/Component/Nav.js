@@ -1,33 +1,45 @@
-import React from 'react';
-import {jwtDecode} from 'jwt-decode'; 
-import Logo from '../Photos/MXM_ADRA_Logotype_January_2018_Color.png';
+import React, { useEffect, useState } from 'react';
+import { jwtDecode } from 'jwt-decode';
+import axios from 'axios';
+import Logo from '../Photos/logo1.jpg';
 
 const Nav = () => {
-    const token = localStorage.getItem('JWT'); 
+    const [fullName, setFullName] = useState(''); 
 
-    let uniqueName = '';
-    if (token) {
-        const decodedToken = jwtDecode(token);
-        uniqueName = decodedToken.unique_name || ''; 
-    }
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
+
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('JWT'); 
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken.unique_name; 
+                setFullName(userId)
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+
+        fetchUserData();
+    }, []); 
 
     return (
         <nav className="navbar">
-            <div className="navbar-content">
-                <div className="navbar-content-menu">
-                    <div className="navbar-logo-icon">
-                        <img src={Logo} alt="Logo" />
-                    </div>
-                    <div className="navbar-content-menu-name">
-                        <p>Task Manager</p>
-                    </div>
+            <div className="navbar__logo">
+                <div className="navbar__logo-img">
+                    <img src={Logo} alt="Logo" />
                 </div>
-                <div className="navbar-content-menu-options">
-                    <div className="navbar-content-menu-options-new">
-                        <p>{uniqueName}</p> 
-                        <i className="fa-solid fa-user"></i>
-                    </div>
+                <div className="navbar__logo-name">
+                    <p>Task Manager</p>
                 </div>
+            </div>
+            <div className="navbar__user">
+                <p>{fullName}</p>
             </div>
         </nav>
     );

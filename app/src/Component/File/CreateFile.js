@@ -5,18 +5,16 @@ import { useParams } from 'react-router-dom';
 const CreateFile = ({ onClose }) => {
     const [file, setFile] = useState(null);
     const { id } = useParams();
-    const [error, setError] = useState('');
-    const [formErrors, setFormErrors] = useState({});
+    const [error, setError] = useState({});
 
     const handleFileChange = (e) => {
         setFile(e.target.files[0]);
-        setError('');
-        setFormErrors({});
+        setError({}); // Clear errors when a new file is selected
     };
 
     const fetchPost = async () => {
         if (!file) {
-            setFormErrors({ File: ['Yükləmək üçün bir fayl seçin.'] });
+            setError({ File: ['Yükləmək üçün bir fayl seçin.'] });
             return;
         }
 
@@ -31,44 +29,38 @@ const CreateFile = ({ onClose }) => {
                 },
             });
             console.log("Fayl müvəffəqiyyətlə yükləndi");
-            onClose();
-            window.location.reload();
+            onClose(); // Close the popup
+            window.location.reload(); // Reload the page
         } catch (error) {
-            console.error("Fayl yüklənərkən xəta", error);
-            if (error.response && error.response.data.errors) {
-                const validationErrors = error.response.data.errors;
-                setFormErrors(validationErrors);
-            } else {
-                setError('Fayl yüklənərkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.');
-            }
+            console.error("Fayl yüklənərkən xəta", error.response.data.errors);
+            setError(error.response.data.errors); // Set errors from the API response
         }
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Item Yarat</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
+        <section className="popup-overlay">
+            <div className="popup-container">
+                <div className="popup-header">
+                    <h3>Create File</h3>
+                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
+                </div>
+
+                <div className="popup-content">
+                    <div className="input-group">
+                        <div className="input-half">
+                            <label htmlFor="file">Upload File</label>
+                            <input type="file" id="file" onChange={handleFileChange} />
+                            {/* Display validation error for file */}
+                            <span className={`errors ${error?.File?.[0] ? 'visible' : ''}`}>
+                                {error?.File?.[0]}
+                            </span>
+                        </div>
                     </div>
                 </div>
 
-                {/* Form content */}
-                <div className="pop_order_mid">
-                    {error && <div className="error-message" style={{ color: 'red' }}>{error}</div>}
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="file">Fayl</label>
-                        <input type="file" id="file" onChange={handleFileChange} />
-                        {formErrors.File && <span className="error">{formErrors.File[0]}</span>}
-                    </div>
-                    
-                    <div className="pop_order_main_footer">
-                        <button className="pop_order_submit_btn" onClick={fetchPost}>Tamam</button>
-                    </div>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={onClose}>Cancel</button>
+                    <button className="submit-btn" onClick={fetchPost}>Submit</button>
                 </div>
             </div>
         </section>

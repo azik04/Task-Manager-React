@@ -1,53 +1,65 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; 
-import Theme from './Theme/Theme';
+import { useNavigate, useLocation } from 'react-router-dom'; 
+import { jwtDecode } from "jwt-decode";
+import Theme from "../Component/Theme/Theme"
 import GetThemeByUser from './UserTheme/GetThemeByUser';
-
 const Header = () => {
-    const [isAdmin, setIsAdmin] = useState(false); 
     const navigate = useNavigate();
     const location = useLocation(); 
+    const [isAdmin, setIsAdmin] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('JWT');
-        if (token) {
-            try {
-                const decoded = jwtDecode(token);
-                setIsAdmin(decoded.role === 'Admin');
-            } catch (error) {
-                console.error('Failed to decode token:', error);
-            }
+        const userToken = localStorage.getItem("JWT");
+        const decodedToken = jwtDecode(userToken);
+        if (decodedToken.role === "Admin" || decodedToken.role === "Viewer") {
+            setIsAdmin(true);
         }
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem('JWT');
-        localStorage.removeItem('UserId');
-        navigate('/'); 
+        navigate('/Auth');
     };
 
+    const isActive = (path) => location.pathname === path; 
+
+
     return (
-        <header className="header">
-            <div className="header-menu">
-                <a 
-                    href="/Admin" 
-                    className={`header-menu-one ${location.pathname === '/Admin' ? 'active' : ''}`}
+        <header className="sidebar">
+            <div className="sidebar__menu">
+                {isAdmin && (
+                    <a
+                        href="/Admin"
+                        className={`sidebar__menu-item ${isActive('/Admin') ? 'active' : ''}`}
+                    >
+                        <div className="sidebar__menu-item-one">
+                            <i className="fa-solid fa-users"></i>
+                            <p>Admin</p>
+                        </div>
+                    </a>
+                )}
+                <a
+                    href="/Settings"
+                    className={`sidebar__menu-item ${isActive('/Settings') ? 'active' : ''}`}
                 >
-                    <i className="fa-solid fa-users"></i>
-                    <p>Admin</p>
+                    <div className="sidebar__menu-item-one">
+                        <i className="fa-solid fa-gear"></i>
+                        <p>Ayarlar</p>
+                    </div>
                 </a>
-                <a 
-                    href="/" 
-                    className={`header-menu-one ${location.pathname === '/' ? 'active' : ''}`} 
+                <button
+                    className={`sidebar__menu-item ${isActive('/Auth') ? 'active' : ''}`}
                     onClick={handleLogout}
                 >
-                    <i className="fa-solid fa-right-from-bracket"></i>
-                    <p>Log Out</p>
-                </a>
+                    <div className="sidebar__menu-item-one">
+                        <i className="fa-solid fa-right-from-bracket"></i>
+                        <p>Log Out</p>
+                    </div>
+                </button>
             </div>
-            <Theme />
-            <GetThemeByUser />
+
+            <Theme/>
+            <GetThemeByUser/>
         </header>
     );
 };

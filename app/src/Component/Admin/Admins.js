@@ -1,34 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreateUser from './CreateUser'; 
-import ChangePassword from './ChangePassword'; 
-import ChangeEmail from './ChangeEmail'; 
 import RemoveUser from './RemoveUser';
+import CreateUser from './CreateUser';
+import ChangeRole from './ChangeRole';
 
 const Admins = () => {
     const [admins, setAdmins] = useState([]);
     const [isPopupOpen, setPopupOpen] = useState(false);
-    const [isChangeEmailOpen, setChangeEmailOpen] = useState(false); 
-    const [isChangePasswordOpen, setChangePasswordOpen] = useState(false);
+    const [isChangeRoleOpen, setChangeRoleOpen] = useState(false);
     const [isRemoveUserOpen, setRemoveUserOpen] = useState(false);
     const [currentUserId, setCurrentUserId] = useState(null);
 
     useEffect(() => {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
+        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`;
         const fetchAdmins = async () => {
             try {
                 const adminRes = await axios.get('https://localhost:7146/api/Admin/Admins');
                 setAdmins(adminRes.data.data || []);
             } catch (error) {
-                console.error('Adminlərin alınmasında səhv:', error);
+                console.error('Error fetching admins:', error);
             }
         };
         fetchAdmins();
     }, []);
 
     const togglePopup = () => setPopupOpen(!isPopupOpen);
-    const toggleChangeEmail = () => setChangeEmailOpen(!isChangeEmailOpen); 
-    const toggleChangePassword = () => setChangePasswordOpen(!isChangePasswordOpen);
+    const toggleChangeRole = () => setChangeRoleOpen(!isChangeRoleOpen);
     const toggleRemoveUser = () => setRemoveUserOpen(!isRemoveUserOpen);
 
     return (
@@ -44,35 +41,31 @@ const Admins = () => {
             </div>
 
             {isPopupOpen && <CreateUser onClose={togglePopup} />}
-            {isChangeEmailOpen && <ChangeEmail onClose={toggleChangeEmail} userId={currentUserId} />} 
-            {isChangePasswordOpen && <ChangePassword onClose={toggleChangePassword} userId={currentUserId} />}
             {isRemoveUserOpen && <RemoveUser onClose={toggleRemoveUser} userId={currentUserId} />}
+            {isChangeRoleOpen && <ChangeRole onClose={toggleChangeRole} userId={currentUserId} />}
 
             <table>
                 <thead>
-                    <tr>
-                        <th className="tr_task">İstifadəçi Adı</th>
+                    <tr className="tr-header">
+                        <th className="tr_owner">İstifadəçi Adı</th>
                         <th className="tr_owner">İstifadəçi E-poçtu</th>
-                        <th className="tr_status">E-poçtu Dəyiş</th>
-                        <th className="tr_psw">Şifrəni Dəyiş</th>
-                        <th className="tr_dlt">Sil</th>
+                        <th className="tr_owner">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {admins.map(admin => (
-                        <tr key={admin.id}>
-                            <td className="tr_task">{admin.userName}</td>
-                            <td className="tr_owner">{admin.email}</td>
-                            <td className="tr_status">
-                                <button onClick={() => { setCurrentUserId(admin.id); toggleChangeEmail(); }}>
-                                    E-poçtu Dəyiş
-                                </button>
-                            </td>
-                            <td className="tr_psw">
-                                <button onClick={() => { setCurrentUserId(admin.id); toggleChangePassword(); }}>Şifrəni Dəyiş</button>
-                            </td>
-                            <td className="tr_dlt">
-                                <i className="fa-regular fa-trash-can delete-icon" onClick={() => { setCurrentUserId(admin.id); toggleRemoveUser(); }}></i>
+                    {admins.map((user) => (
+                        <tr key={user.id}>
+                            <td className="tr_owner">{user.fullName}</td>
+                            <td className="tr_owner">{user.email}</td>
+                            <td className="tr_user">
+                                <div className="tr_user_all">
+                                    <button onClick={() => { setCurrentUserId(user.id); toggleChangeRole(); }}>
+                                        Change Role <i className="fa-solid fa-pen-to-square"></i>
+                                    </button>
+                                    <button onClick={() => { setCurrentUserId(user.id); toggleRemoveUser(); }}>
+                                        Remove <i className="fa-regular fa-trash-can delete-icon"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     ))}

@@ -1,131 +1,87 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import CreateTheme from './CreateTheme';
-import AddToTheme from '../UserTheme/AddToTheme'; // AddToTheme-ni idxal edin
-import RemoveTheme from './RemoveTheme'; // RemoveTheme-ni idxal edin
-import GetUsersByTheme from '../UserTheme/GetUsersByTheme'; // GetUsersByTheme-ni idxal edin
-import { Link, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import CreateChanal from './CreateTheme';
+import RemoveChanal from './RemoveTheme';
+import EditChanal from './EditTheme';
+import GetThemeByUser from '../UserTheme/GetUsersByTheme';
+import { jwtDecode } from 'jwt-decode'; 
 
-const Theme = () => {
+const Chanal = () => {
     const [data, setData] = useState([]);
-    const [userId, setUserId] = useState(null);
-    const [activePopup, setActivePopup] = useState(null); // Aktiv pop-upı idarə et
-    const [gearDivPosition, setGearDivPosition] = useState(null);
-    const [themeToRemove, setThemeToRemove] = useState(null); // Silinəcək mövzu üçün vəziyyət əlavə edin
+    const [isUserKanalOpen, setIsUserKanalOpen] = useState(false);
+    const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false);
+    const [channelToRemove, setChannelToRemove] = useState(null);
+    const [activeGearChannel, setActiveGearChannel] = useState(null);
     const location = useLocation();
+    const [isEditChanalOpen, setIsEditChanalOpen] = useState(false);
+    const [channelToEdit, setChannelToEdit] = useState(null);
+
+    const [isCreateChanalOpen, setIsCreateChanalOpen] = useState(false);
+    const navigate = useNavigate();
+
 
     useEffect(() => {
-        const fetchThemes = async () => {
-            const storedUserId = localStorage.getItem("UserId");
-            if (storedUserId) {
-                setUserId(storedUserId);
-                try {
-                    const res = await axios.get(`https://localhost:7146/api/Theme/User/${storedUserId}`);
-                    setData(res.data.data || []);
-                } catch (error) {
-                    console.error('Mövzuları əldə edərkən xəta:', error);
-                }
-            } else {
-                console.error('Local storage-da UserId tapılmadı');
+        const fetchData = async () => {
+            try {
+                const token = localStorage.getItem('JWT');
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken?.UserId;
+                const response = await axios.get(`https://localhost:7146/api/Theme?userId=${userId}`, {
+                    headers: { Authorization: `Bearer ${localStorage.getItem("JWT")}` }
+                });
+                console.log(response.data.data)
+                setData(response.data.data || []);
+            } catch (error) {
+                console.error('Error fetching channels:', error);
+                setData([]);
             }
         };
 
-        fetchThemes();
-    }, []);
-
-    const handleAddTheme = () => {
-        setActivePopup('create'); // Aktiv pop-upı CreateTheme olaraq təyin et
-    };
-
-    const handleAddUserToTheme = (themeId) => {
-        setThemeToRemove(themeId); // Seçilmiş mövzu ID-sini təyin et
-        setActivePopup('addUser'); // Aktiv pop-upı AddToTheme olaraq təyin et
-    };
-
-    const handleRemoveUserFromTheme = (themeId) => {
-        setThemeToRemove(themeId); // Seçilmiş mövzu ID-sini təyin et
-        setActivePopup('removeUser'); // Aktiv pop-upı GetUsersByTheme olaraq təyin et
-    };
-
-    // Gear ikonuna klik edərkən idarə et
-    const handleGearClick = (event, themeId) => {
-        const rect = event.currentTarget.getBoundingClientRect();
-        const offset = 100;
-
-        // Eyni mövzu üçün gear seçimləri açıqdırsa, bağlayın
-        if (themeToRemove === themeId && gearDivPosition) {
-            setGearDivPosition(null); // Gear seçimlərini bağlayın
-            setThemeToRemove(null); // Seçilmiş mövzunu təmizləyin
-        } else {
-            // Kliklənmiş mövzu üçün gear seçimlərini açın
-            setGearDivPosition({
-                top: rect.bottom + window.scrollY - offset,
-                left: rect.left + window.scrollX + 30
-            });
-            setThemeToRemove(themeId); // Seçilmiş mövzu ID-sini təyin et
-        }
-    };
-
-    const closePopup = () => {
-        setActivePopup(null); // Bütün pop-upları bağlayın
-        setGearDivPosition(null); // Gear seçimlərini bağlayın
-        setThemeToRemove(null); // Seçilmiş mövzunu təmizləyin
-    };
-
-    const handleRemoveTheme = () => {
-        setActivePopup('remove'); // Aktiv pop-upı RemoveTheme olaraq təyin et
-    };
+        fetchData();
+    }, []);    
 
     return (
-        <div className="header-themes">
-            <div className="header-themes-name">
-                <p>Mövzular</p>
-                <button onClick={handleAddTheme}>+</button>
+        <div className="sidebar__channels">
+            <div className="sidebar__channels-header">
+                <p>Layiheler</p>
+                <button className="sidebar__add-channel-btn" onClick={() => setIsCreateChanalOpen(true) }>
+                    <i className="fa-solid fa-plus"></i>
+                </button>
             </div>
-            {data.map((theme) => (
-                <Link
-                    to={`/Theme/${theme.id}/Task`}
-                    key={theme.id}
-                    className={`header-themes-one ${location.pathname === `/Theme/${theme.id}/Task` ? 'active' : ''}`}
-                >
-                    <div className="header-themes-one-left">
-                        <i className="fa-solid fa-clipboard"></i>
-                        <p>{theme.name}</p>
+
+            {data.map((channel) => (
+                <div key={channel.id} className="sidebar__menu-item-wrapper">
+                    <div onClick={() => navigate(`/Theme/${channel.id}/Task`)} className={`sidebar__menu-item ${location.pathname.includes(`/Theme/${channel.id}`) ? 'active' : ''}` }>
+                        <div className="sidebar__menu-item-one">
+                            <i class="fa-solid fa-list-check"></i>
+                            <p>{channel.name}</p>
+                        </div>
+                        <div className="sidebar__menu-item-one">
+                                <i
+                                    className={`fa-solid fa-gear ${activeGearChannel === channel.id ? 'gear-spin' : ''}`}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setActiveGearChannel(prev => (prev === channel.id ? null : channel.id));
+                                    }}
+                                ></i>
+                        </div>
                     </div>
-                    <div className="header-themes-one-right">
-                        <i className="fa-solid fa-gear" onClick={(e) => handleGearClick(e, theme.id)}></i>
-                    </div>
-                </Link>
+                    {activeGearChannel === channel.id && (
+                        <div className="gear-div">
+                            <button className="gear-div__button" onClick={(e) => { e.stopPropagation(); setIsRemoveModalOpen(true); setChannelToRemove(channel.id); }}>Kanalı Sil</button>
+                            <button  className="gear-div__button"  onClick={(e) => {  e.stopPropagation();  setIsUserKanalOpen(true);  setChannelToRemove(channel.id);}}>Kanal Ayarları</button>                        
+                        </div>
+                    )}
+                </div>
             ))}
 
-            {activePopup === 'create' && (
-                <CreateTheme onClose={closePopup} setData={setData} />
-            )}
-            {activePopup === 'addUser' && (
-                <AddToTheme onClose={closePopup} themeId={themeToRemove} />
-            )}
-            {activePopup === 'remove' && (
-                <RemoveTheme onClose={closePopup} themeId={themeToRemove} setData={setData} />
-            )}
-            {activePopup === 'removeUser' && (
-                <GetUsersByTheme onClose={closePopup} themeId={themeToRemove} />
-            )}
-
-            {gearDivPosition && (
-                <div
-                    className="gear-div"
-                    style={{
-                        top: `${gearDivPosition.top}px`,
-                        left: `${gearDivPosition.left}px`,
-                        position: 'absolute'
-                    }}>
-                    <button onClick={() => handleAddUserToTheme(themeToRemove)}>Mövzuya İstifadəçi Əlavə Et</button>
-                    <button onClick={() => handleRemoveUserFromTheme(themeToRemove)}>Mövzudakı İstifadəçilər</button>
-                    <button onClick={handleRemoveTheme}>Mövzunu Sil</button>
-                </div>
-            )}
+            {isCreateChanalOpen && <CreateChanal close={() => setIsCreateChanalOpen(false)} />}
+            {isUserKanalOpen && <GetThemeByUser close={() => setIsUserKanalOpen(false)} id={channelToRemove} />}
+            {isRemoveModalOpen && <RemoveChanal close={() => setIsRemoveModalOpen(false)} id={channelToRemove} />}
+            {isEditChanalOpen && <EditChanal close={() => setIsEditChanalOpen(false)} kanalId={channelToEdit} />}
         </div>
     );
 };
 
-export default Theme;
+export default Chanal;

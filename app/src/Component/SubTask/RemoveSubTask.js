@@ -1,46 +1,36 @@
-import React, { useState } from 'react';
+import React from 'react';
 import axios from 'axios';
 
-const RemoveSubTask = ({ subtaskId, onClose, onRemove }) => {
-    const [error, setError] = useState(null);
+const RemoveTask = ({ onClose , subtaskId }) => {
 
-    const remItem = async () => {
-        setError(null);
-        
+    const remTask = async () => {
         try {
-            const response = await axios.delete(`https://localhost:7146/api/SubTask/${subtaskId}`); 
-            console.log('Alt tapşırıq uğurla silindi', response.data);
-            onRemove(subtaskId); 
-            onClose();
+            const res = await axios.delete(`https://localhost:7146/api/SubTask/${subtaskId}`);
+            console.log(res);
+            onClose(); 
+            window.location.reload()
         } catch (error) {
-            setError("Alt tapşırığı silmək alınmadı. Zəhmət olmasa, yenidən cəhd edin.");
-            console.error("Xəta", error);
+            console.error('Error removing task:', error);
         }
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Alt Tapşırığı Sil</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
-                </div>
-
-                <div className="pop_order_mid">
-                    <div className="pop_order_mid_inp">
-                        <p>Bu alt tapşırığı silmək istəyirsinizmi?</p>
-                    </div>
-                    <div className='pop_order_footer'>
-                        <button className="rem_btn" onClick={remItem}>Sil</button>
-                    </div>
-                </div>
+    <section className="popup-overlay">
+        <div className="popup-container-rem">
+            <div className="popup-header">
+                <h3>Alt Tapşırıgı Sil</h3>
+                <i className="fa-solid fa-xmark" onClick={onClose}></i>
             </div>
-        </section>
+            <div className="popup-content">
+                <p>Bu kanalı silmək istədiyinizə əminsinizmi?</p>
+            </div>
+            <div className="popup-footer">
+                <button className="cancel-btn" onClick={onClose}>Xeyr</button>
+                <button className="submit-btn" onClick={remTask}>Bəli</button>
+            </div>
+        </div>
+    </section>
     );
 };
 
-export default RemoveSubTask;
+export default RemoveTask;

@@ -2,71 +2,103 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const CreateUser = ({ onClose }) => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [userName, setUserName] = useState('');
-    const [errors, setErrors] = useState({});
+    const [error, setErrors] = useState({});
 
-    const createUser = async () => {
+    const fetchPost = async () => {
         setErrors({});
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
-
         try {
-            const response = await axios.post('https://localhost:7146/api/Admin/Register', {
-                email,
-                password,
-                userName
-            });
+            const Data = {
+                firstName: firstName,
+                lastName: lastName,
+                email: email,
+                password: password,
+            };
+    
+            console.log('Sending commentData:', Data);
+    
+            const response = await axios.post(`https://localhost:7146/api/Admin/Register`, Data);
+            console.log('Response:', response.data);
             onClose();
             window.location.reload();
         } catch (error) {
-            console.log(error);
-            if (error.response) {
-                const { data } = error.response;
-                if (data.errors) {
-                    setErrors(data.errors);
-                } else if (data.description) {
-                    setErrors({ general: data.description });
-                }
-            }
+            console.error('Error posting comment:', error.response.data.errors);
+            setErrors(error.response.data.errors)
         }
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>İstifadəçi Yarat</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
+        <section className="popup-overlay">
+            <div className="popup-container">
+                <div className="popup-header">
+                    <h3>Create User</h3>
+                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
                 </div>
 
-                {/* Form content */}
-                <div className="pop_order_mid">
-                    {errors.general && <p style={{ color: 'red' }}>{errors.general}</p>}
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="userName">İstifadəçi Adı</label>
-                        <input type="text" id="userName" placeholder="İstifadəçi Adı" value={userName} onChange={(e) => setUserName(e.target.value)} />
-                        {errors.UserName && <span className="error">{errors.UserName[0]}</span>}
+                <div className="popup-content">
+                    <div className="input-group">
+                        <div className="input-half">
+                            <label htmlFor="channel-name">FirstName</label>
+                            <input
+                                type="text"
+                                id="channel-name"
+                                placeholder="FirstName"
+                                onChange={(e) => setFirstName(e.target.value)}
+                            />
+                              <span className={`errors ${error?.FirstName?.[0] ? 'visible' : ''}`}>
+                                {error?.FirstName?.[0]}
+                            </span>
+                        </div>
+                        <div className="input-half">
+                            <label htmlFor="channel-name">LastName</label>
+                            <input
+                                type="text"
+                                id="channel-name"
+                                placeholder="LastName"
+                                onChange={(e) => setLastName(e.target.value)}
+                            />
+                            <span className={`errors ${error?.LastName?.[0] ? 'visible' : ''}`}>
+                                {error?.LastName?.[0]}
+                            </span>
+                        </div>
                     </div>
-
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="email">Email</label>
-                        <input type="email" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                        {errors.Email && <span className="error">{errors.Email[0]}</span>}
+                    <div className="input-group">
+                        <div className="input-half">
+                            <label htmlFor="channel-name">Email</label>
+                            <input
+                                type="text"
+                                id="channel-name"
+                                placeholder="Email"
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
+                            <span className={`errors ${error?.Email?.[0] ? 'visible' : ''}`}>
+                                {error?.Email?.[0]}
+                            </span>
+                        </div>
+                        <div className="input-half">
+                            <label htmlFor="channel-name">Password</label>
+                            <input
+                                type="text"
+                                id="channel-name"
+                                placeholder="Password"
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <span className={`errors ${error?.Password?.[0] ? 'visible' : ''}`}>
+                                {error?.Password?.[0]}
+                            </span>
+                        </div>
                     </div>
-
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="password">Şifrə</label>
-                        <input type="text" id="password" placeholder="Şifrə" value={password} onChange={(e) => setPassword(e.target.value)} />
-                        {errors.Password && <span className="error">{errors.Password[0]}</span>}
-                    </div>
-
-                    <button className="pop_order_submit_btn" onClick={createUser}>Tamamla</button>
+                </div>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={onClose}>
+                        Cancel
+                    </button>
+                    <button className="submit-btn" onClick={fetchPost}>
+                        Submit
+                    </button>
                 </div>
             </div>
         </section>

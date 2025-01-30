@@ -1,44 +1,37 @@
 import React from 'react';
 import axios from 'axios';
-// import Photo from '..//Cancel.svg'; 
 
-const RemoveTheme = ({ onClose, themeId, setData }) => {
-    const remTheme = async () => {
+const RemoveChanal = ({ close, id }) => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
+
+    const removeChannel = async () => {
         try {
-            await axios.delete(`https://localhost:7146/api/Theme/${themeId}`);
-            setData((prevData) => prevData.filter(theme => theme.id !== themeId));
-            onClose(); 
-            window.location.reload()
+            const res = await axios.delete(`https://localhost:7146/api/Theme/${id}`);
+            console.log("Channel Removed:", res);
+            window.location.reload();
+            close();  
         } catch (error) {
-            console.error('Error removing theme:', error);
+            console.error("Error deleting channel:", error);
         }
     };
 
     return (
-        <section className="pop">
-        <div className="pop-order">
-            {/* Header with close button */}
-            <div className="pop_order_nav">
-                <div className="pop_order_nav_left">
-                    <p>Layiheni Sil</p>
+        <section className="popup-overlay">
+            <div className="popup-container-rem">
+                <div className="popup-header">
+                    <h3>Kanalı Sil</h3>
+                    <i className="fa-solid fa-xmark" onClick={close}></i>
                 </div>
-                <div className="pop_order_nav_right">
-                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
+                <div className="popup-content">
+                    <p>Bu kanalı silmək istədiyinizə əminsinizmi?</p>
                 </div>
-            </div>
-
-            <div className="pop_order_mid">
-                <div className="pop_order_mid_inp">
-                    <p>Bu Layiheni silmək istəyirsinizmi?</p>
-                </div>
-                <div className='pop_order_footer'>
-                    <button className="rem_btn" onClick={remTheme}>Sil</button>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={close}>Xeyr</button>
+                    <button className="submit-btn" onClick={removeChannel}>Bəli</button>
                 </div>
             </div>
-        </div>
-    </section>
-        
+        </section>
     );
 };
 
-export default RemoveTheme;
+export default RemoveChanal;

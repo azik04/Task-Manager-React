@@ -1,47 +1,46 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-// import Photo from '../Photos/Cancel.svg';
 
 const ChangeRole = ({ onClose, userId }) => {
-    const [newRole, setNewRole] = useState('');
+    const [role, setRole] = useState('');
 
-    const chgRole = async () => {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
-
+    const handleRoleChange = async () => {
         try {
-            const res = await axios.put(`https://localhost:7146/api/Admin/${userId}/ChangeRole`, {
-                newRole: newRole,
+            const response = await axios.put(`https://localhost:7146/api/Admin/${userId}/ChangeRole`, {
+                role: parseInt(role),
             });
-            console.log(res);
-            onClose();
-            window.location.reload();
+            console.log(response.data);
+            onClose(); // Close the popup
+            window.location.reload(); // Reload the page to reflect changes
         } catch (error) {
-            console.error('Rol dəyişdirərkən xəta:', error);
+            console.error('Error changing role:', error);
         }
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Rolu Dəyişdir</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
+        <section className="popup-overlay">
+            <div className="popup-container-rem">
+                <div className="popup-header">
+                    <h3>Change User Role</h3>
+                    <i className="fa-solid fa-xmark" onClick={onClose}></i>
                 </div>
-
-                {/* Form content */}
-                <div className="pop_order_mid">
-                    <div className="pop_order_mid_inp">
-                        <p>Bu İstifadəçini Admin etmək istəyirsiniz?</p>
+                <div className="input-group">
+                        <div className="input-half">
+                        <label>Role</label>
+                    <select value={role} onChange={(e) => setRole(e.target.value)}>
+                        <option value="">Select Role</option>
+                        <option value="0">User</option>
+                        <option value="1">Admin</option>
+                    </select>
+                        </div>
                     </div>
-
-                    <div className='pop_order_footer'>
-                        <button className="rem_btn" onClick={chgRole}>Testiqle</button>
-                    </div>
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={onClose}>
+                        Cancel
+                    </button>
+                    <button className="submit-btn" onClick={handleRoleChange}>
+                        Submit
+                    </button>
                 </div>
             </div>
         </section>

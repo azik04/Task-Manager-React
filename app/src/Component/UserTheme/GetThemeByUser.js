@@ -1,34 +1,28 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import {jwtDecode} from 'jwt-decode';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const GetThemeByUser = () => {
     const [data, setData] = useState([]);
-    const [userId, setUserId] = useState(null);
-    const [userName, setUserName] = useState('');
-    const location = useLocation();
+    const location = useLocation(); 
+    const navigate = useNavigate();
+    
     axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
     useEffect(() => {
         const fetchThemes = async () => {
-            const storedUserId = localStorage.getItem("UserId");
-            console.log("UserId", storedUserId);
-            if (storedUserId) {
-                setUserId(storedUserId);
-                try {
-                    const res = await axios.get(`https://localhost:7146/api/UserTheme/User/${storedUserId}/Theme`);
-                    console.log(res.data.data);
-                    setData(res.data.data || []);
+            try {
+                const token = localStorage.getItem('JWT');
+                const decodedToken = jwtDecode(token);
+                const userId = decodedToken?.UserId;
 
-                    const userRes = await axios.get(`https://localhost:7146/api/User/${storedUserId}`);
-                    console.log(userRes);
-                    setUserName(userRes.data.data.userName);
-
-                } catch (error) {
-                    console.error('Temaların alınmasında səhv:', error);
-                }
-            } else {
-                console.error('UserId yerli saxlamada tapılmadı');
+                const response = await axios.get(`https://localhost:7146/api/UserTheme/User/${userId}/Theme`);
+                console.log(response)
+                setData(response.data.data);
+                console.log("tasks by user", response.data.data);
+            } catch (error) {
+                console.error('Temaların alınmasında səhv:', error);
             }
         };
 
@@ -36,25 +30,20 @@ const GetThemeByUser = () => {
     }, []);
 
     return (
-        <div className="header-themes">
-            <div className="header-themes-name">
-                <p>Mövzulara əlavə edilib</p>
-            </div>
-            {data.map((theme) => (
-                <Link 
-                    to={`/Theme/${theme.id}/Task`} 
-                    key={theme.id} 
-                    className={`header-themes-one ${location.pathname === `/Theme/${theme.id}/Task` ? 'active' : ''}`} 
-                >
-                    <div className="header-themes-one-left">
-                        <i className="fa-solid fa-clipboard"></i>
-                        <p>{theme.name} ({userName})</p>
+        <div className="sidebar__channels">
+
+               {data.map((channel) => (
+                <div key={channel.id} className="sidebar__menu-item-wrapper">
+                    <div onClick={() => navigate(`/Theme/${channel.themeId}/Task`)} className={`sidebar__menu-item ${location.pathname.includes(`/Theme/${channel.id}`) ? 'active' : ''}` }>
+                        <div className="sidebar__menu-item-one">
+                            <i class="fa-solid fa-list-check"></i>
+                            <p>{channel.themeName}  ({channel.createdBy})</p>
+                        </div>
                     </div>
-                    <div className="header-themes-one-right">
-                    </div>
-                </Link>
+                </div>
             ))}
         </div>
+        
     );
 };
 

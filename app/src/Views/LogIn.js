@@ -1,7 +1,7 @@
 import React, { useState } from 'react'; 
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode'; 
-import Photo from '../Photos/MXM_ADRA_Logotype_January_2018_Color.png';
+import Photo from '../Photos/logo1.jpg';
 import { useNavigate } from 'react-router-dom';
 
 const LogIn = () => {
@@ -9,15 +9,11 @@ const LogIn = () => {
     const [password, setPassword] = useState('');
     const [error, setError] = useState(''); 
     const [errors, setErrors] = useState({}); 
-    const [showPassword, setShowPassword] = useState(false); 
     const navigate = useNavigate();
 
     const fetchPost = async () => {
-        setError('');
-        setErrors({}); 
-
         try {
-            const res = await axios.post(`https://localhost:7146/api/User/LogIn`, {
+            const res = await axios.post(`https://localhost:7146/api/Auth/Auth`, {
                 userName: user,
                 password: password
             }, { withCredentials: true });
@@ -61,6 +57,7 @@ const LogIn = () => {
                     <p>Log In</p>
                     {error && <div className="error">{error}</div>}
                     <div className="login-right-main-inp">
+                        <label>User Name</label>
                         <input 
                             type="text" 
                             placeholder="User Name" 
@@ -68,9 +65,10 @@ const LogIn = () => {
                             onChange={(e) => setUserName(e.target.value)} 
                             required
                         />
-                        {errors.UserName && <span className='error'>{errors.UserName[0]}</span>} 
+                            {errors.UserName && <span className='error'>{errors.UserName[0]}</span>} 
                     </div>
                     <div className="login-right-main-inp">
+                        <label>Password</label>
                         <input 
                             type="text" 
                             placeholder="Password" 
@@ -79,6 +77,10 @@ const LogIn = () => {
                             required
                         />
                         {errors.Password && <span className='error'>{errors.Password[0]}</span>} 
+                    </div>
+                    <div className="login-right-main-inp">
+                        <label>Remember Me</label>
+                        <input type="checkbox" onChange={(e) => setPassword(e.target.value)} />
                     </div>
                 </div>
                 <div className="auth_main_footer">

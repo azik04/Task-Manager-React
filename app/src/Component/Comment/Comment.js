@@ -9,52 +9,24 @@ const Comment = () => {
     const [isRemovePopupVisible, setRemovePopupVisible] = useState(false);
     const [removeId, setRemoveId] = useState(null);
     const [items, setItems] = useState([]);
-    const [userNames, setUserNames] = useState({}); 
     const { id } = useParams();
 
-    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
+    axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem('JWT')}`;
     
     useEffect(() => {
         const fetchData = async (id) => {
             try {
                 const res = await axios.get(`https://localhost:7146/api/Comment/Task/${id}`);
                 const comments = res.data.data || [];
+                console.log(res.data.data);
                 setItems(comments);
-                fetchUserNames(comments); 
             } catch (error) {
-                console.error('Məlumat alınarkən xəta baş verdi', error);
+                console.error('Error fetching data:', error);
             }
         };
 
         fetchData(id);
     }, [id]);
-
-    const fetchUserNames = async (comments) => {
-        const userIds = [...new Set(comments.map(comment => comment.userId))];
-
-        if (userIds.length === 0) {
-            console.log("İstifadəçi ID-ləri tapılmadı.");
-            return; 
-        }
-
-        const userMap = {};
-
-        await Promise.all(userIds.map(async (userId) => {
-            try {
-                const response = await axios.get(`https://localhost:7146/api/User/${userId}`);
-                userMap[userId] = response.data.data.userName; 
-            } catch (error) {
-                console.error(`İstifadəçi ID ${userId}-ni alarkən xəta baş verdi:`, error);
-            }
-        }));
-
-        setUserNames(userMap); 
-    };
-
-    const formatDateTime = (dateString) => {
-        const date = new Date(dateString);
-        return `${date.getDate()} ${date.toLocaleString('default', { month: 'long' })} ${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-    };
 
     const createPopupVisible = () => {
         setCreatePopupVisible(true);
@@ -73,29 +45,45 @@ const Comment = () => {
         setRemovePopupVisible(false);
     };
 
+    // Format date function
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return new Intl.DateTimeFormat('en-GB', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+        }).format(date);
+    };
+
     return (
         <div className="info_comment">
             <div className="info_comment_header">
-                <h2>Şərhlər</h2>
+                <p>Şərhlər</p>
                 <button className="create-comment-button" onClick={createPopupVisible}>Şərh Yarat</button>
             </div>
             
             <div className="info_comment_list">
-                {items.length > 0 ? (
-                    items.map((item) => (
-                        <div className="info_comment_item" key={item.id}>
-                            <div className="comment-meta-header">
-                                <p className="comment-text">{item.message}</p>
-                                <p className="username">{userNames[item.userId] || 'Yüklənir...'}</p>
-                                <p className="created-at">{formatDateTime(item.createAt)}</p>
-                                <div className="comment-meta-rm">
-                                <i className="fa-regular fa-trash-can delete-icon" onClick={() => removePopupVisible(item.id)}></i> 
-                                </div>
-                            </div>
+                <div className="comment-meta-nav">
+                    <p className="comment-text-nav">Message</p>
+                    <p className="username">UserName</p>
+                    <p className="created-at">Created At</p>
+                </div>
+                {items && items.length > 0 ? (
+                    items.map(item => (
+                        <div className="comment-meta-header" key={item.id}>
+                            <p className="comment-text">{item.message}</p>
+                            <p className="username">{item.userName}</p>
+                            <p className="created-at">{formatDate(item.createAt)}</p>
+                            <button>
+                                <i
+                                    className="fa-regular fa-trash-can delete-icon"
+                                    onClick={() => removePopupVisible(item.id)}
+                                ></i>
+                            </button>
                         </div>
                     ))
                 ) : (
-                    <p className="info_comment_list_p">Heç bir şərh tapılmadı</p>
+                    <div style={{ textAlign: 'center', margin: '12px 0' }}>No comments found</div>
                 )}
             </div>
             {isCreatePopupVisible && <CreateComment onClose={closeCreatePopupVisible} />}

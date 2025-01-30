@@ -1,76 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'; 
 
-const CreateTheme = ({ onClose }) => {
+const CreateTheme = ({ close }) => {
     const [name, setName] = useState('');
-    const [userId, setUserId] = useState(null);
-    const [errors, setErrors] = useState([]);
-
-    useEffect(() => {
-        const storedUserId = localStorage.getItem("UserId");
-        if (storedUserId) {
-            setUserId(storedUserId);
-        } else {
-            console.error('Local saxlamada UserId tapılmadı');
-        }
-    }, []);
-
+    const [error, setError] = useState({}); 
     axios.defaults.headers.common['Authorization'] = `Bearer ${localStorage.getItem("JWT")}`;
 
-    const fetchNew = async () => {
-        setErrors([]);
-        if (!name.trim()) {
-            setErrors(['Mövzu adı tələb olunur.']);
-            return;
-        }
+    const crtChanal = async () => {
         try {
-            const res = await axios.post(`https://localhost:7146/api/Theme`, {
-                name,
-                userId
+            const token = localStorage.getItem('JWT');
+            const decodedToken = jwtDecode(token);
+            const userId = decodedToken?.UserId;
+            console.log(userId)
+            const res = await axios.post('https://localhost:7146/api/Theme', {
+                name: name,
+                createdBy : userId
             });
-            console.log("Mövzu müvəffəqiyyətlə yaradıldı", res.data);
-            onClose();
+            console.log("Channel Created:", res);
             window.location.reload();
+            close();
         } catch (error) {
-            console.error("Mövzu yaradılarkən xəta:", error);
-            if (error.response && error.response.data.errors) {
-                setErrors(error.response.data.errors.Name || ['Mövzu yaradılarkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.']);
-            } else {
-                setErrors(['Mövzu yaradılarkən xəta baş verdi. Zəhmət olmasa, yenidən cəhd edin.']);
-            }
+            console.error('Error creating channel:', error.response?.data?.errors);
+            setError(error.response?.data?.errors || {});
         }
     };
 
     return (
-        <section className="pop">
-            <div className="pop-order">
-                {/* Header with close button */}
-                <div className="pop_order_nav">
-                    <div className="pop_order_nav_left">
-                        <p>Layihəni Yarat</p>
-                    </div>
-                    <div className="pop_order_nav_right">
-                        <i className="fa-solid fa-xmark" onClick={onClose}></i>
-                    </div>
+        <section className="popup-overlay">
+            <div className="popup-container-rem">
+                <div className="popup-header">
+                    <h3>Create Channel</h3>
+                    <i className="fa-solid fa-xmark" onClick={close}></i>
                 </div>
 
-                {/* Form content */}
-                <div className="pop_order_mid">
-                    <div className="pop_order_mid_inp">
-                        <label htmlFor="name">Ad</label>
-                        <input
-                            type="text"
-                            id="name"
-                            placeholder="Mövzu adı"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                        />
-                             {errors.map((error, index) => (
-                                <span key={index} style={{ color: 'red' ,  fontSize: "13px"  }}>{error}</span>
-                            ))}
+                <div className="popup-content">
+                    <div className="input-group">
+                        <div className="input-half">
+                            <label htmlFor="channel-name">Channel Name</label>
+                            <input 
+                                type="text" 
+                                id="channel-name" 
+                                placeholder="Enter Channel Name" 
+                                onChange={(e) => setName(e.target.value)} 
+                            />
+                            <span className={`errors ${error?.Name?.[0] ? 'visible' : ''}`}>
+                                {error?.Name?.[0]}
+                            </span>
+                        </div>
                     </div>
-
-                    <button className="pop_order_submit_btn" onClick={fetchNew}>Tamamla</button>
+                </div>
+                
+                <div className="popup-footer">
+                    <button className="cancel-btn" onClick={close}>Cancel</button>
+                    <button className="submit-btn" onClick={crtChanal}>Submit</button>
                 </div>
             </div>
         </section>

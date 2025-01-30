@@ -4,9 +4,10 @@ import NotDoneTask from '../Component/Task/NotDoneTask';
 
 const Tasks = () => {
     return (
-        <section className="more">
+        <section className="content">
             <NotDoneTask />
             <DoneTask />
+
         </section>
     );
 };

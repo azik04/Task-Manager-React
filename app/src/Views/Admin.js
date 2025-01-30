@@ -4,7 +4,7 @@ import Users from '../Component/Admin/Users';
 
 const Admin = () => {
     return (
-        <section className="more">
+        <section className="content">
             <Admins />
             <Users />
         </section>
